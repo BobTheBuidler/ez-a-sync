@@ -1,15 +1,18 @@
-from collections.abc import ItemsView, Iterator, KeysView, ValuesView
-from concurrent.futures import Executor
-from typing import Any, Final
+from typing import Any
 
-from a_sync._typing import (CacheType, CoroFn, DefaultMode, ModifierKwargs, P, SemaphoreSpec,
-                            SyncFn, T)
-from a_sync.a_sync.config import null_modifiers, user_set_default_modifiers
-from a_sync.a_sync.modifiers import cache, limiter, semaphores
+from _typeshed import Incomplete
 
-valid_modifiers: tuple[str, ...]
+from a_sync._typing import *
+from a_sync.a_sync.config import null_modifiers as null_modifiers
+from a_sync.a_sync.config import \
+    user_set_default_modifiers as user_set_default_modifiers
+from a_sync.a_sync.modifiers import cache as cache
+from a_sync.a_sync.modifiers import limiter as limiter
+from a_sync.a_sync.modifiers import semaphores as semaphores
 
-class ModifierManager(dict[str, Any]):
+valid_modifiers: Tuple[str, ...]
+
+class ModifierManager(Dict[str, Any]):
     """Manages modifiers for asynchronous and synchronous functions.
 
     This class is responsible for applying modifiers to functions, such as
@@ -44,9 +47,9 @@ class ModifierManager(dict[str, Any]):
     default: DefaultMode
     cache_type: CacheType
     cache_typed: bool
-    ram_cache_maxsize: int | None
-    ram_cache_ttl: int | None
-    runs_per_minute: int | None
+    ram_cache_maxsize: Optional[int]
+    ram_cache_ttl: Optional[int]
+    runs_per_minute: Optional[int]
     semaphore: SemaphoreSpec
     executor: Executor
     def __init__(self, modifiers: ModifierKwargs) -> None:
@@ -211,5 +214,5 @@ class ModifierManager(dict[str, Any]):
             'memory'
         """
 
-NULLS: Final[ModifierManager]
-USER_DEFAULTS: Final[ModifierManager]
+NULLS: Incomplete
+USER_DEFAULTS: Incomplete

@@ -7,8 +7,7 @@ The mixin provides a framework for managing a debug daemon task, which can be us
 import asyncio
 import os
 import threading
-from asyncio import AbstractEventLoop, Future, Task
-from typing import Any
+import typing
 
 from a_sync.a_sync._helpers cimport get_event_loop
 from a_sync.asyncio.create_task cimport ccreate_task_simple
@@ -16,12 +15,19 @@ from a_sync.primitives._loggable cimport _LoggerMixin
 
 
 # cdef asyncio
+cdef object AbstractEventLoop = asyncio.AbstractEventLoop
+cdef object Future = asyncio.Future
+cdef object Task = asyncio.Task
 cdef object _running_loop = asyncio.events._running_loop
 del asyncio
 
 # cdef os
-cdef object _getpid = os.getpid
+cdef object getpid = os.getpid
 del os
+
+# cdef typing
+cdef object Optional = typing.Optional
+del typing
 
 
 cdef public object _global_lock = threading.Lock()
@@ -36,7 +42,7 @@ cdef object _get_running_loop():
     """
     cdef object running_loop, pid
     running_loop, pid = _running_loop.loop_pid
-    if running_loop is not None and <int>pid == <int>_getpid():
+    if running_loop is not None and <int>pid == <int>getpid():
         return running_loop
 
 
@@ -116,7 +122,7 @@ cdef class _DebugDaemonMixin(_LoopBoundMixin):
         """
         raise NotImplementedError
 
-    def _start_debug_daemon(self, *args, **kwargs) -> Future[None]:
+    def _start_debug_daemon(self, *args, **kwargs) -> "Future[None]":
         """
         Starts the debug daemon task if debug logging is enabled and the event loop is running.
 
@@ -187,7 +193,7 @@ cdef class _DebugDaemonMixin(_LoopBoundMixin):
             
         self._has_daemon = True
 
-    def _stop_debug_daemon(self, t: Task[Any] | None = None) -> None:
+    def _stop_debug_daemon(self, t: Optional[Task] = None) -> None:
         """
         Stops the debug daemon task.
 
@@ -215,6 +221,3 @@ cdef class _DebugDaemonMixin(_LoopBoundMixin):
         t.cancel()
         self._daemon = None
         self._has_daemon = False
-
-
-del AbstractEventLoop, Any, Future, Task

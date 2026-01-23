@@ -1,27 +1,19 @@
 import asyncio
-from collections.abc import AsyncIterator
-from typing import Any
 
 import pytest
 
 from a_sync import TaskMapping, a_sync, create_task
 from a_sync.a_sync.base import ASyncGenericBase
-from a_sync.a_sync.function import (
-    ASyncFunction,
-    ASyncFunctionAsyncDefault,
-    ASyncFunctionSyncDefault,
-)
-from a_sync.a_sync.function import _ASyncFunction  # type: ignore[attr-defined]
-from a_sync.a_sync.method import (
-    ASyncBoundMethod,
-    ASyncBoundMethodAsyncDefault,
-    ASyncBoundMethodSyncDefault,
-)
-from a_sync.a_sync.method import _ASyncBoundMethod  # type: ignore[attr-defined]
+from a_sync.a_sync.function import (ASyncFunction, ASyncFunctionAsyncDefault,
+                                    ASyncFunctionSyncDefault, _ASyncFunction)
+from a_sync.a_sync.method import (ASyncBoundMethod,
+                                  ASyncBoundMethodAsyncDefault,
+                                  ASyncBoundMethodSyncDefault,
+                                  _ASyncBoundMethod)
 from a_sync.task import _EmptySequenceError, _unwrap
 
 
-async def _coro_fn(key: int) -> str:
+async def _coro_fn(key):
     """Coroutine function for testing.
 
     Args:
@@ -38,7 +30,7 @@ async def _coro_fn(key: int) -> str:
 
 
 @pytest.mark.asyncio_cooperative
-async def test_create_task() -> None:
+async def test_create_task():
     """Test the creation of an asynchronous task.
 
     Verifies that a task can be created using the `create_task`
@@ -53,7 +45,7 @@ async def test_create_task() -> None:
 
 
 @pytest.mark.asyncio_cooperative
-async def test_persistent_task() -> None:  # sourcery skip: simplify-boolean-comparison
+async def test_persistent_task():  # sourcery skip: simplify-boolean-comparison
     """Test the persistence of a task without a local reference.
 
     Checks if a task created without a local reference
@@ -66,20 +58,19 @@ async def test_persistent_task() -> None:  # sourcery skip: simplify-boolean-com
     """
     check = False
 
-    async def task() -> None:
+    async def task():
         await asyncio.sleep(1)
         nonlocal check
         check = True
 
-    created_task = create_task(coro=task(), skip_gc_until_done=True)
-    del created_task
+    create_task(coro=task(), skip_gc_until_done=True)
     # there is no local reference to the newly created task. does it still complete?
     await asyncio.sleep(2)
     assert check is True
 
 
 @pytest.mark.asyncio_cooperative
-async def test_pruning() -> None:
+async def test_pruning():
     """Test task creation and handling without errors.
 
     Ensures that tasks can be created without causing errors.
@@ -90,19 +81,17 @@ async def test_pruning() -> None:
         - :func:`a_sync.create_task`
     """
 
-    async def task() -> None:
-        return None
+    async def task():
+        return
 
-    created_task = create_task(coro=task(), skip_gc_until_done=True)
-    del created_task
+    create_task(coro=task(), skip_gc_until_done=True)
     await asyncio.sleep(0)
     # previously, it failed here
-    created_task = create_task(coro=task(), skip_gc_until_done=True)
-    del created_task
+    create_task(coro=task(), skip_gc_until_done=True)
 
 
 @pytest.mark.asyncio_cooperative
-async def test_task_mapping_init() -> None:
+async def test_task_mapping_init():
     """Test initialization of TaskMapping.
 
     Verifies that the :class:`TaskMapping` class initializes correctly
@@ -112,8 +101,10 @@ async def test_task_mapping_init() -> None:
     See Also:
         - :class:`a_sync.TaskMapping`
     """
-    tasks: Any = TaskMapping(_coro_fn)
-    assert tasks._wrapped_func is _coro_fn, f"{tasks._wrapped_func} , {_coro_fn}"
+    tasks = TaskMapping(_coro_fn)
+    assert (
+        tasks._wrapped_func is _coro_fn
+    ), f"{tasks._wrapped_func} , {_coro_fn}, {tasks._wrapped_func == _coro_fn}"
     assert tasks._wrapped_func_kwargs == {}
     assert tasks._name is None
     tasks = TaskMapping(_coro_fn, name="test", kwarg0=1, kwarg1=None)
@@ -122,7 +113,7 @@ async def test_task_mapping_init() -> None:
 
 
 @pytest.mark.asyncio_cooperative
-async def test_task_mapping() -> None:
+async def test_task_mapping():
     """Test the functionality of TaskMapping.
 
     Checks the behavior of :class:`TaskMapping`, including task
@@ -132,7 +123,7 @@ async def test_task_mapping() -> None:
     See Also:
         - :class:`a_sync.TaskMapping`
     """
-    tasks: Any = TaskMapping(_coro_fn)
+    tasks = TaskMapping(_coro_fn)
     # does it return the correct type
     assert isinstance(tasks[0], asyncio.Task)
     # does it correctly return existing values
@@ -155,7 +146,7 @@ async def test_task_mapping() -> None:
 
 
 @pytest.mark.asyncio_cooperative
-async def test_task_mapping_map_with_sync_iter() -> None:
+async def test_task_mapping_map_with_sync_iter():
     """Test TaskMapping with a synchronous iterator.
 
     Verifies that :class:`TaskMapping` can map over a synchronous
@@ -166,7 +157,7 @@ async def test_task_mapping_map_with_sync_iter() -> None:
     See Also:
         - :class:`a_sync.TaskMapping`
     """
-    tasks: Any = TaskMapping(_coro_fn)
+    tasks = TaskMapping(_coro_fn)
     i = 0
     async for k, v in tasks.map(range(5)):
         assert isinstance(k, int)
@@ -174,19 +165,19 @@ async def test_task_mapping_map_with_sync_iter() -> None:
         if i < 4:
             # this shouldn't work since there is a mapping in progress
             with pytest.raises(RuntimeError):
-                async for _item in tasks.map(range(5)):
+                async for k in tasks.map(range(5)):
                     ...
         i += 1
     tasks = TaskMapping(_coro_fn)
-    async for key in tasks.map(range(5), pop=False, yields="keys"):
-        assert isinstance(key, int)
+    async for k in tasks.map(range(5), pop=False, yields="keys"):
+        assert isinstance(k, int)
 
     # test keys
     for k in tasks.keys():
         assert isinstance(k, int)
-    awaited_keys = await tasks.keys()
-    assert isinstance(awaited_keys, list)
-    for k in awaited_keys:
+    awaited = await tasks.keys()
+    assert isinstance(awaited, list)
+    for k in awaited:
         assert isinstance(k, int)
     async for k in tasks.keys():
         assert isinstance(k, int)
@@ -195,9 +186,9 @@ async def test_task_mapping_map_with_sync_iter() -> None:
     for v in tasks.values():
         assert isinstance(v, asyncio.Future)
         assert isinstance(await v, str)
-    awaited_values = await tasks.values()
-    assert isinstance(awaited_values, list)
-    for v in awaited_values:
+    awaited = await tasks.values()
+    assert isinstance(awaited, list)
+    for v in awaited:
         assert isinstance(v, str)
     async for v in tasks.values():
         assert isinstance(v, str)
@@ -207,9 +198,9 @@ async def test_task_mapping_map_with_sync_iter() -> None:
         assert isinstance(k, int)
         assert isinstance(v, asyncio.Future)
         assert isinstance(await v, str)
-    awaited_items = await tasks.items()
-    assert isinstance(awaited_items, list)
-    for k, v in awaited_items:
+    awaited = await tasks.items()
+    assert isinstance(awaited, list)
+    for k, v in awaited:
         assert isinstance(k, int)
         assert isinstance(v, str)
     async for k, v in tasks.items():
@@ -218,7 +209,7 @@ async def test_task_mapping_map_with_sync_iter() -> None:
 
 
 @pytest.mark.asyncio_cooperative
-async def test_task_mapping_map_with_async_iter() -> None:
+async def test_task_mapping_map_with_async_iter():
     """Test TaskMapping with an asynchronous iterator.
 
     Verifies that :class:`TaskMapping` can map over an asynchronous
@@ -230,11 +221,11 @@ async def test_task_mapping_map_with_async_iter() -> None:
         - :class:`a_sync.TaskMapping`
     """
 
-    async def async_iter() -> AsyncIterator[int]:
+    async def async_iter():
         for i in range(5):
             yield i
 
-    tasks: Any = TaskMapping(_coro_fn)
+    tasks = TaskMapping(_coro_fn)
     i = 0
     async for k, v in tasks.map(async_iter()):
         assert isinstance(k, int)
@@ -242,19 +233,19 @@ async def test_task_mapping_map_with_async_iter() -> None:
         if i < 4:
             # this shouldn't work since there is a mapping in progress
             with pytest.raises(RuntimeError):
-                async for _item in tasks.map(async_iter()):
+                async for k in tasks.map(async_iter()):
                     ...
         i += 1
     tasks = TaskMapping(_coro_fn)
-    async for key in tasks.map(async_iter(), pop=False, yields="keys"):
-        assert isinstance(key, int)
+    async for k in tasks.map(async_iter(), pop=False, yields="keys"):
+        assert isinstance(k, int)
 
     # test keys
     for k in tasks.keys():
         assert isinstance(k, int)
-    awaited_keys = await tasks.keys()
-    assert isinstance(awaited_keys, list)
-    for k in awaited_keys:
+    awaited = await tasks.keys()
+    assert isinstance(awaited, list)
+    for k in awaited:
         assert isinstance(k, int)
     async for k in tasks.keys():
         assert isinstance(k, int)
@@ -267,9 +258,9 @@ async def test_task_mapping_map_with_async_iter() -> None:
     for v in tasks.values():
         assert isinstance(v, asyncio.Future)
         assert isinstance(await v, str)
-    awaited_values = await tasks.values()
-    assert isinstance(awaited_values, list)
-    for v in awaited_values:
+    awaited = await tasks.values()
+    assert isinstance(awaited, list)
+    for v in awaited:
         assert isinstance(v, str)
     async for v in tasks.values():
         assert isinstance(v, str)
@@ -287,9 +278,9 @@ async def test_task_mapping_map_with_async_iter() -> None:
         assert isinstance(k, int)
         assert isinstance(v, asyncio.Future)
         assert isinstance(await v, str)
-    awaited_items = await tasks.items()
-    assert isinstance(awaited_items, list)
-    for k, v in awaited_items:
+    awaited = await tasks.items()
+    assert isinstance(awaited, list)
+    for k, v in awaited:
         assert isinstance(k, int)
         assert isinstance(v, str)
     async for k, v in tasks.items():
@@ -306,7 +297,7 @@ async def test_task_mapping_map_with_async_iter() -> None:
     assert not tasks  # did pop work?
 
 
-def test_taskmapping_views_sync() -> None:
+def test_taskmapping_views_sync():
     """Test synchronous views of TaskMapping.
 
     Checks the synchronous access to keys, values, and items
@@ -316,7 +307,7 @@ def test_taskmapping_views_sync() -> None:
     See Also:
         - :class:`a_sync.TaskMapping`
     """
-    tasks: Any = TaskMapping(_coro_fn, range(5))
+    tasks = TaskMapping(_coro_fn, range(5))
 
     # keys are currently empty until the loop has a chance to run
     _assert_len_dictviews(tasks, 0)
@@ -341,7 +332,7 @@ def test_taskmapping_views_sync() -> None:
 
 
 @pytest.mark.asyncio_cooperative
-async def test_task_mapping_empty_iterable() -> None:
+async def test_task_mapping_empty_iterable():
     """Test TaskMapping with an empty iterable."""
     tasks = TaskMapping(_coro_fn, [])
     assert len(tasks) == 0
@@ -350,7 +341,7 @@ async def test_task_mapping_empty_iterable() -> None:
 
 
 @pytest.mark.asyncio_cooperative
-async def test_task_mapping_single_item() -> None:
+async def test_task_mapping_single_item():
     """Test TaskMapping with a single-item iterable."""
     tasks = TaskMapping(_coro_fn, [0])
     await asyncio.sleep(0.01)
@@ -359,10 +350,10 @@ async def test_task_mapping_single_item() -> None:
 
 
 @pytest.mark.asyncio_cooperative
-async def test_task_mapping_error_handling() -> None:
+async def test_task_mapping_error_handling():
     """Test TaskMapping with a function that raises an exception."""
 
-    async def error_fn(key: int) -> str:
+    async def error_fn(key):
         raise ValueError("Intentional error")
 
     tasks = TaskMapping(error_fn, [0])
@@ -371,214 +362,206 @@ async def test_task_mapping_error_handling() -> None:
 
 
 @pytest.mark.asyncio_cooperative
-async def test_task_mapping_concurrency() -> None:
+async def test_task_mapping_concurrency():
     """Test TaskMapping with a concurrency limit."""
-    tasks: Any = TaskMapping(_coro_fn, range(10), concurrency=3)
-    running_tasks = [
-        task for task in tasks.values() if isinstance(task, asyncio.Future) and not task.done()
-    ]
+    tasks = TaskMapping(_coro_fn, range(10), concurrency=3)
+    running_tasks = [task for task in tasks.values() if not task.done()]
     assert len(running_tasks) <= 3
 
 
-def _assert_len_dictviews(tasks: TaskMapping[int, str], i: int) -> None:
+def _assert_len_dictviews(tasks, i):
     assert len(tasks.keys()) == i
     assert len(tasks.values()) == i
     assert len(tasks.items()) == i
 
 
 # TODO: add unwrap tests for bound method and property classes
-def test_unwrap_basic() -> None:
-    async def test_fn() -> None: ...
+def test_unwrap_basic():
+    async def test_fn(): ...
 
-    unwrapped: Any = _unwrap(test_fn)
+    unwrapped = _unwrap(test_fn)
     assert unwrapped is test_fn
 
 
-def test_unwrap_a_sync_function_sync_def() -> None:
+def test_unwrap_a_sync_function_sync_def():
     @a_sync
-    def test_fn() -> None: ...
+    def test_fn(): ...
 
     assert isinstance(test_fn, _ASyncFunction)
     assert isinstance(test_fn, ASyncFunction)
-    test_fn_any: Any = test_fn
-    unwrapped: Any = _unwrap(test_fn_any)
-    assert unwrapped is not test_fn_any
-    assert unwrapped is not test_fn_any.__wrapped__
-    assert unwrapped is test_fn_any._asyncified
+    unwrapped = _unwrap(test_fn)
+    assert unwrapped is not test_fn
+    assert unwrapped is not test_fn.__wrapped__
+    assert unwrapped is test_fn._asyncified
     assert not isinstance(unwrapped, _ASyncFunction)
     assert not isinstance(unwrapped, ASyncFunction)
 
 
-def test_unwrap_a_sync_function_async_def() -> None:
+def test_unwrap_a_sync_function_async_def():
     @a_sync
-    async def test_fn() -> None: ...
+    async def test_fn(): ...
 
     assert isinstance(test_fn, _ASyncFunction)
     assert isinstance(test_fn, ASyncFunction)
-    test_fn_any: Any = test_fn
-    unwrapped: Any = _unwrap(test_fn_any)
-    assert unwrapped is not test_fn_any
-    assert unwrapped is test_fn_any.__wrapped__
-    assert unwrapped is test_fn_any._modified_fn
+    unwrapped = _unwrap(test_fn)
+    assert unwrapped is not test_fn
+    assert unwrapped is test_fn.__wrapped__
+    assert unwrapped is test_fn._modified_fn
     assert not isinstance(unwrapped, _ASyncFunction)
     assert not isinstance(unwrapped, ASyncFunction)
 
 
-def test_unwrap_a_sync_function_sync_def_sync_default() -> None:
+def test_unwrap_a_sync_function_sync_def_sync_default():
     @a_sync("sync")
-    def test_fn() -> None: ...
+    def test_fn(): ...
 
     assert isinstance(test_fn, _ASyncFunction)
     assert isinstance(test_fn, ASyncFunctionSyncDefault)
-    test_fn_any: Any = test_fn
-    unwrapped: Any = _unwrap(test_fn_any)
-    assert unwrapped is not test_fn_any
-    assert unwrapped is not test_fn_any.__wrapped__
-    assert unwrapped is test_fn_any._asyncified
+    unwrapped = _unwrap(test_fn)
+    assert unwrapped is not test_fn
+    assert unwrapped is not test_fn.__wrapped__
+    assert unwrapped is test_fn._asyncified
     assert not isinstance(unwrapped, _ASyncFunction)
     assert not isinstance(unwrapped, ASyncFunction)
 
 
-def test_unwrap_a_sync_function_async_def_sync_default() -> None:
-    @a_sync("sync")  # type: ignore[arg-type]
-    async def test_fn() -> None: ...
+def test_unwrap_a_sync_function_async_def_sync_default():
+    @a_sync("sync")
+    async def test_fn(): ...
 
     assert isinstance(test_fn, _ASyncFunction)
     assert isinstance(test_fn, ASyncFunctionSyncDefault)
-    test_fn_any: Any = test_fn
-    unwrapped: Any = _unwrap(test_fn_any)
-    assert unwrapped is not test_fn_any
-    assert unwrapped is test_fn_any.__wrapped__
-    assert unwrapped is test_fn_any._modified_fn
+    unwrapped = _unwrap(test_fn)
+    assert unwrapped is not test_fn
+    assert unwrapped is test_fn.__wrapped__
+    assert unwrapped is test_fn._modified_fn
     assert not isinstance(unwrapped, _ASyncFunction)
     assert not isinstance(unwrapped, ASyncFunction)
 
 
-def test_unwrap_a_sync_function_sync_def_async_default() -> None:
+def test_unwrap_a_sync_function_sync_def_async_default():
     @a_sync("async")
-    def test_fn() -> None: ...
+    def test_fn(): ...
 
     assert isinstance(test_fn, _ASyncFunction)
     assert isinstance(test_fn, ASyncFunctionAsyncDefault)
-    test_fn_any: Any = test_fn
-    unwrapped: Any = _unwrap(test_fn_any)
-    assert unwrapped is not test_fn_any
-    assert unwrapped is not test_fn_any.__wrapped__
-    assert unwrapped is test_fn_any._asyncified
+    unwrapped = _unwrap(test_fn)
+    assert unwrapped is not test_fn
+    assert unwrapped is not test_fn.__wrapped__
+    assert unwrapped is test_fn._asyncified
     assert not isinstance(unwrapped, _ASyncFunction)
     assert not isinstance(unwrapped, ASyncFunction)
 
 
-def test_unwrap_a_sync_function_async_def_async_default() -> None:
-    @a_sync("async")  # type: ignore[arg-type]
-    async def test_fn() -> None: ...
+def test_unwrap_a_sync_function_async_def_async_default():
+    @a_sync("async")
+    async def test_fn(): ...
 
     assert isinstance(test_fn, _ASyncFunction)
     assert isinstance(test_fn, ASyncFunctionAsyncDefault)
-    test_fn_any: Any = test_fn
-    unwrapped: Any = _unwrap(test_fn_any)
-    assert unwrapped is not test_fn_any
-    assert unwrapped is test_fn_any.__wrapped__
-    assert unwrapped is test_fn_any._modified_fn
+    unwrapped = _unwrap(test_fn)
+    assert unwrapped is not test_fn
+    assert unwrapped is test_fn.__wrapped__
+    assert unwrapped is test_fn._modified_fn
     assert not isinstance(unwrapped, _ASyncFunction)
     assert not isinstance(unwrapped, ASyncFunction)
 
 
-def test_unwrap_a_sync_method_sync_def() -> None:
+def test_unwrap_a_sync_method_sync_def():
     class MyClass(ASyncGenericBase):
-        def __init__(self, sync: bool) -> None:
+        def __init__(self, sync):
             self.sync = sync
             super().__init__()
 
-        def test_fn(self) -> None: ...
+        def test_fn(self): ...
 
     test_fn = MyClass(sync=True).test_fn
     assert isinstance(test_fn, _ASyncFunction)
     assert isinstance(test_fn, _ASyncBoundMethod)
     assert isinstance(test_fn, ASyncBoundMethod)
-    unwrapped: Any = _unwrap(test_fn)
+    unwrapped = _unwrap(test_fn)
     assert unwrapped is test_fn
 
 
-def test_unwrap_a_sync_method_async_def() -> None:
+def test_unwrap_a_sync_method_async_def():
     class MyClass(ASyncGenericBase):
-        def __init__(self, sync: bool) -> None:
+        def __init__(self, sync):
             self.sync = sync
             super().__init__()
 
-        async def test_fn(self) -> None: ...
+        async def test_fn(self): ...
 
     test_fn = MyClass(sync=True).test_fn
     assert isinstance(test_fn, _ASyncFunction)
     assert isinstance(test_fn, _ASyncBoundMethod)
     assert isinstance(test_fn, ASyncBoundMethod)
-    unwrapped: Any = _unwrap(test_fn)
+    unwrapped = _unwrap(test_fn)
     assert unwrapped is test_fn
 
 
-def test_unwrap_a_sync_method_sync_def_sync_defult() -> None:
+def test_unwrap_a_sync_method_sync_def_sync_defult():
     class MyClass(ASyncGenericBase):
-        def __init__(self, sync: bool) -> None:
+        def __init__(self, sync):
             self.sync = sync
             super().__init__()
 
         @a_sync("sync")
-        def test_fn(self) -> None: ...
+        def test_fn(self): ...
 
     test_fn = MyClass(sync=True).test_fn
     assert isinstance(test_fn, _ASyncFunction)
     assert isinstance(test_fn, _ASyncBoundMethod)
     assert isinstance(test_fn, ASyncBoundMethodSyncDefault)
-    unwrapped: Any = _unwrap(test_fn)
+    unwrapped = _unwrap(test_fn)
     assert unwrapped is test_fn
 
 
-def test_unwrap_a_sync_method_async_def_sync_defult() -> None:
+def test_unwrap_a_sync_method_async_def_sync_defult():
     class MyClass(ASyncGenericBase):
-        def __init__(self, sync: bool) -> None:
+        def __init__(self, sync):
             self.sync = sync
             super().__init__()
 
-        @a_sync("sync")  # type: ignore[arg-type]
-        async def test_fn(self) -> None: ...
+        @a_sync("sync")
+        async def test_fn(self): ...
 
     test_fn = MyClass(sync=True).test_fn
     assert isinstance(test_fn, _ASyncFunction)
     assert isinstance(test_fn, _ASyncBoundMethod)
     assert isinstance(test_fn, ASyncBoundMethodSyncDefault)
-    unwrapped: Any = _unwrap(test_fn)
+    unwrapped = _unwrap(test_fn)
     assert unwrapped is test_fn
 
 
-def test_unwrap_a_sync_method_sync_def_async_default() -> None:
+def test_unwrap_a_sync_method_sync_def_async_default():
     class MyClass(ASyncGenericBase):
-        def __init__(self, sync: bool) -> None:
+        def __init__(self, sync):
             self.sync = sync
             super().__init__()
 
         @a_sync("async")
-        def test_fn(self) -> None: ...
+        def test_fn(self): ...
 
     test_fn = MyClass(sync=True).test_fn
     assert isinstance(test_fn, _ASyncFunction)
     assert isinstance(test_fn, _ASyncBoundMethod)
     assert isinstance(test_fn, ASyncBoundMethodAsyncDefault)
-    unwrapped: Any = _unwrap(test_fn)
+    unwrapped = _unwrap(test_fn)
     assert unwrapped is test_fn
 
 
-def test_unwrap_a_sync_method_async_def_async_default() -> None:
+def test_unwrap_a_sync_method_async_def_async_default():
     class MyClass(ASyncGenericBase):
-        def __init__(self, sync: bool) -> None:
+        def __init__(self, sync):
             self.sync = sync
             super().__init__()
 
-        @a_sync("async")  # type: ignore[arg-type]
-        async def test_fn(self) -> None: ...
+        @a_sync("async")
+        async def test_fn(self): ...
 
     test_fn = MyClass(sync=True).test_fn
     assert isinstance(test_fn, _ASyncFunction)
     assert isinstance(test_fn, _ASyncBoundMethod)
     assert isinstance(test_fn, ASyncBoundMethodAsyncDefault)
-    unwrapped: Any = _unwrap(test_fn)
+    unwrapped = _unwrap(test_fn)
     assert unwrapped is test_fn

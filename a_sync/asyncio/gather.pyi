@@ -2,9 +2,9 @@
 This module provides an enhanced version of :func:`asyncio.gather`.
 """
 
-from typing import Any, Awaitable, Callable, Mapping, overload
+from typing import Any, Awaitable, Dict, List, Mapping, overload
 
-from a_sync._typing import K, T, V
+from a_sync._typing import *
 
 __all__ = ["gather", "gather_mapping"]
 
@@ -18,10 +18,10 @@ Excluder = Callable[[T], bool]
 async def gather(
     awaitables: Mapping[K, Awaitable[V]],
     return_exceptions: bool = False,
-    exclude_if: Excluder[V] | None = None,
+    exclude_if: Optional[Excluder[V]] = None,
     tqdm: bool = False,
     **tqdm_kwargs: Any
-) -> dict[K, V]:
+) -> Dict[K, V]:
     """
     Concurrently awaits a k:v mapping of awaitables and returns the results.
 
@@ -48,10 +48,10 @@ async def gather(
 async def gather(
     *awaitables: Awaitable[T],
     return_exceptions: bool = False,
-    exclude_if: Excluder[T] | None = None,
+    exclude_if: Optional[Excluder[T]] = None,
     tqdm: bool = False,
     **tqdm_kwargs: Any
-) -> list[T]:
+) -> List[T]:
     """
     Concurrently awaits a series of awaitable objects and returns the results.
 
@@ -73,20 +73,13 @@ async def gather(
         :func:`asyncio.gather`
     """
 
-async def gather(
-    *awaitables: Awaitable[T] | Mapping[K, Awaitable[V]],
-    return_exceptions: bool = False,
-    exclude_if: Excluder[T] | None = None,
-    tqdm: bool = False,
-    **tqdm_kwargs: Any
-) -> list[T] | dict[K, V]: ...
 async def gather_mapping(
     mapping: Mapping[K, Awaitable[V]],
     return_exceptions: bool = False,
-    exclude_if: Excluder[V] | None = None,
+    exclude_if: Optional[Excluder[V]] = None,
     tqdm: bool = False,
     **tqdm_kwargs: Any
-) -> dict[K, V]:
+) -> Dict[K, V]:
     """
     Concurrently awaits a mapping of awaitable objects and returns a dictionary of results.
 
@@ -111,7 +104,5 @@ async def gather_mapping(
         :func:`asyncio.gather`
     """
 
-def cgather(*coros_or_futures: Awaitable[T], return_exceptions: bool = False) -> Awaitable[list[T]]:
+def cgather(*coros_or_futures: Awaitable[T], return_exceptions: bool = False) -> Awaitable[List[T]]:
     """`asyncio.gather` implemented in c"""
-
-async def _exc_wrap(awaitable: Awaitable[T]) -> T | Exception: ...

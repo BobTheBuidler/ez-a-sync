@@ -9,16 +9,19 @@ asynchronously based on various conditions and configurations.
 import functools
 import logging
 import weakref
-from typing import Any, Coroutine, Generic, Literal, Type, final, overload
+from typing import Any, final
 
-from typing_extensions import Concatenate, Self, Unpack
+from _typeshed import Incomplete
 
-from a_sync import TaskMapping
-from a_sync._typing import AnyFn, AnyIterable, I, MaybeCoro, ModifierKwargs, P, T
-from a_sync.a_sync._descriptor import ASyncDescriptor
-from a_sync.a_sync.abstract import ASyncABC
-from a_sync.a_sync.function import (ASyncFunction, ASyncFunctionAsyncDefault,
-                                    ASyncFunctionSyncDefault)
+from a_sync import TaskMapping as TaskMapping
+from a_sync._typing import *
+from a_sync.a_sync._descriptor import ASyncDescriptor as ASyncDescriptor
+from a_sync.a_sync.abstract import ASyncABC as ASyncABC
+from a_sync.a_sync.function import ASyncFunction as ASyncFunction
+from a_sync.a_sync.function import \
+    ASyncFunctionAsyncDefault as ASyncFunctionAsyncDefault
+from a_sync.a_sync.function import \
+    ASyncFunctionSyncDefault as ASyncFunctionSyncDefault
 
 METHOD_CACHE_TTL: Literal[3600]
 logger: logging.Logger
@@ -308,7 +311,7 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
     def map(
         self,
         *iterables: AnyIterable[I],
-        concurrency: int | None = None,
+        concurrency: Optional[int] = None,
         task_name: str = "",
         **kwargs: P.kwargs
     ) -> TaskMapping[I, T]:
@@ -333,7 +336,7 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
     async def any(
         self,
         *iterables: AnyIterable[I],
-        concurrency: int | None = None,
+        concurrency: Optional[int] = None,
         task_name: str = "",
         **kwargs: P.kwargs
     ) -> bool:
@@ -354,7 +357,7 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
     async def all(
         self,
         *iterables: AnyIterable[I],
-        concurrency: int | None = None,
+        concurrency: Optional[int] = None,
         task_name: str = "",
         **kwargs: P.kwargs
     ) -> bool:
@@ -375,7 +378,7 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
     async def min(
         self,
         *iterables: AnyIterable[I],
-        concurrency: int | None = None,
+        concurrency: Optional[int] = None,
         task_name: str = "",
         **kwargs: P.kwargs
     ) -> T:
@@ -396,7 +399,7 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
     async def max(
         self,
         *iterables: AnyIterable[I],
-        concurrency: int | None = None,
+        concurrency: Optional[int] = None,
         task_name: str = "",
         **kwargs: P.kwargs
     ) -> T:
@@ -417,7 +420,7 @@ class ASyncBoundMethod(ASyncFunction[P, T], Generic[I, P, T]):
     async def sum(
         self,
         *iterables: AnyIterable[I],
-        concurrency: int | None = None,
+        concurrency: Optional[int] = None,
         task_name: str = "",
         **kwargs: P.kwargs
     ) -> T:
@@ -476,7 +479,7 @@ class ASyncBoundMethodSyncDefault(ASyncBoundMethod[I, P, T]):
     ) -> Coroutine[Any, Any, T]: ...
     @overload
     def __call__(self, *args: P.args, **kwargs: P.kwargs) -> T: ...
-    def __call__(self, *args, **kwargs): ...
+    __call__: Incomplete
 
 class ASyncBoundMethodAsyncDefault(ASyncBoundMethod[I, P, T]):
     """
@@ -519,4 +522,4 @@ class ASyncBoundMethodAsyncDefault(ASyncBoundMethod[I, P, T]):
     ) -> Coroutine[Any, Any, T]: ...
     @overload
     def __call__(self, *args: P.args, **kwargs: P.kwargs) -> Coroutine[Any, Any, T]: ...
-    def __call__(self, *args, **kwargs): ...
+    __call__: Incomplete

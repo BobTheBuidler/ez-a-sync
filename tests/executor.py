@@ -5,7 +5,8 @@ import time
 
 import pytest
 
-from a_sync import ProcessPoolExecutor, PruningThreadPoolExecutor, ThreadPoolExecutor
+from a_sync import (ProcessPoolExecutor, PruningThreadPoolExecutor,
+                    ThreadPoolExecutor)
 from a_sync.executor import _EXECUTORS, _shutdown_all_executors
 
 

@@ -25,6 +25,8 @@ See Also:
     - :mod:`a_sync.a_sync.modifiers.semaphores`
 """
 
+from typing import Union
+
 from aiolimiter import AsyncLimiter
 
 from a_sync._typing import ModifierKwargs

@@ -46,15 +46,15 @@ cdef class CythonEvent(_DebugDaemonMixin):
         name: str = "",
         debug_daemon_interval: int = 300,
         *,
-        loop: AbstractEventLoop | None = None,
+        loop: Optional[AbstractEventLoop] = None,
     ):
         """
         Initializes the Event.
 
         Args:
-            name: An optional name for the event, used in debug logs.
-            debug_daemon_interval: The interval in seconds for the debug daemon to log information.
-            loop: The event loop to use.
+            name (str): An optional name for the event, used in debug logs.
+            debug_daemon_interval (int): The interval in seconds for the debug daemon to log information.
+            loop (Optional[AbstractEventLoop]): The event loop to use.
         """
         if _loop_kwarg_deprecated:
             _LoopBoundMixin.__init__(self)

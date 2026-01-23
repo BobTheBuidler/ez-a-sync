@@ -1,13 +1,11 @@
 import functools
 from logging import Logger
-from typing import Any, Coroutine, Generic, Literal, overload
-
-from typing_extensions import Concatenate, Unpack
+from typing import Any
 
 from a_sync import TaskMapping
-from a_sync._typing import (AnyBoundMethod, AnyFn, AnyIterable, B, CoroFn, DefaultMode, MaybeCoro,
-                            ModifierKwargs, P, SyncFn, T)
-from a_sync.a_sync.method import (ASyncBoundMethod, ASyncBoundMethodAsyncDefault,
+from a_sync._typing import *
+from a_sync.a_sync.method import (ASyncBoundMethod,
+                                  ASyncBoundMethodAsyncDefault,
                                   ASyncBoundMethodSyncDefault)
 from a_sync.a_sync.modifiers.manager import ModifierManager
 
@@ -194,7 +192,7 @@ class ASyncFunction(_ModifiedMixin, Generic[P, T]):
     def map(
         self,
         *iterables: AnyIterable[P.args],
-        concurrency: int | None = None,
+        concurrency: Optional[int] = None,
         task_name: str = "",
         **function_kwargs: P.kwargs
     ) -> TaskMapping[P, T]:
@@ -217,7 +215,7 @@ class ASyncFunction(_ModifiedMixin, Generic[P, T]):
     async def any(
         self,
         *iterables: AnyIterable[P.args],
-        concurrency: int | None = None,
+        concurrency: Optional[int] = None,
         task_name: str = "",
         **function_kwargs: P.kwargs
     ) -> bool:
@@ -240,7 +238,7 @@ class ASyncFunction(_ModifiedMixin, Generic[P, T]):
     async def all(
         self,
         *iterables: AnyIterable[P.args],
-        concurrency: int | None = None,
+        concurrency: Optional[int] = None,
         task_name: str = "",
         **function_kwargs: P.kwargs
     ) -> bool:
@@ -263,7 +261,7 @@ class ASyncFunction(_ModifiedMixin, Generic[P, T]):
     async def min(
         self,
         *iterables: AnyIterable[P.args],
-        concurrency: int | None = None,
+        concurrency: Optional[int] = None,
         task_name: str = "",
         **function_kwargs: P.kwargs
     ) -> T:
@@ -286,7 +284,7 @@ class ASyncFunction(_ModifiedMixin, Generic[P, T]):
     async def max(
         self,
         *iterables: AnyIterable[P.args],
-        concurrency: int | None = None,
+        concurrency: Optional[int] = None,
         task_name: str = "",
         **function_kwargs: P.kwargs
     ) -> T:
@@ -309,7 +307,7 @@ class ASyncFunction(_ModifiedMixin, Generic[P, T]):
     async def sum(
         self,
         *iterables: AnyIterable[P.args],
-        concurrency: int | None = None,
+        concurrency: Optional[int] = None,
         task_name: str = "",
         **function_kwargs: P.kwargs
     ) -> T:

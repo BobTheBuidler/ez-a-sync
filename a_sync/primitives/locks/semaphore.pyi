@@ -1,17 +1,14 @@
 import asyncio
 import functools
 from logging import Logger
-from threading import Thread
-from typing import DefaultDict, Literal
+from threading import Thread as Thread
 
 from typing_extensions import Never
 
-from a_sync._typing import CoroFn, P, T
+from a_sync._typing import *
 from a_sync.primitives._debug import _DebugDaemonMixin
 
 logger: Logger
-
-async def _noop() -> Literal[True]: ...
 
 class Semaphore(asyncio.Semaphore, _DebugDaemonMixin):
     """
@@ -125,7 +122,7 @@ class DummySemaphore(asyncio.Semaphore):
     """
 
     name: str
-    def __init__(self, name: str | None = None) -> None:
+    def __init__(self, name: Optional[str] = None) -> None:
         """
         Initialize the dummy semaphore with an optional name.
 
@@ -164,9 +161,9 @@ class ThreadsafeSemaphore(Semaphore):
         :class:`Semaphore` for the base class implementation.
     """
 
-    semaphores: DefaultDict[Thread, Semaphore] | dict[Never, Never]
+    semaphores: DefaultDict[Thread, Semaphore] | Dict[Never, Never]
     dummy: DummySemaphore | None
-    def __init__(self, value: int | None, name: str | None = None) -> None:
+    def __init__(self, value: Optional[int], name: Optional[str] = None) -> None:
         """
         Initialize the threadsafe semaphore with a given value and optional name.
 

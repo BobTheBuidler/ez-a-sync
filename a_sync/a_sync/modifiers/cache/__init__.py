@@ -1,12 +1,13 @@
 # mypy: disable-error-code=valid-type
 # mypy: disable-error-code=misc
 from asyncio import iscoroutinefunction
-from typing import TypedDict, overload
+from typing import Optional, TypedDict, Union, overload
 
 from typing_extensions import Unpack
 
 from a_sync import exceptions
-from a_sync._typing import AsyncDecorator, AsyncDecoratorOrCoroFn, CacheType, CoroFn, P, T
+from a_sync._typing import (AsyncDecorator, AsyncDecoratorOrCoroFn, CacheType,
+                            CoroFn, P, T)
 from a_sync.a_sync.modifiers.cache.memory import apply_async_memory_cache
 
 
