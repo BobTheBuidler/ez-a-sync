@@ -928,6 +928,11 @@ class SmartProcessingQueue(_VariablePriorityQueueMixin[T], ProcessingQueue[Conca
                         fut.set_exception(e)
                     except InvalidStateError:
                         _log_invalid_state_err("exception", func, fut, e)
+                    else:
+                        # Exception should be raised by the waiter(s).
+                        # Mark it as retrieved in case all waiter(s)
+                        # are cancelled to avoid noisy logs.
+                        fut.exception()
                 else:
                     try:
                         fut.set_result(result)
