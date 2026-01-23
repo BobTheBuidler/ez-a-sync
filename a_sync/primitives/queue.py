@@ -902,15 +902,17 @@ class SmartProcessingQueue(_VariablePriorityQueueMixin[T], ProcessingQueue[Conca
                         return
                     raise
 
-                if fut is None:
+                if (
                     # The weakref was already cleaned up, which means there are no waiters.
+                    fut is None
+                    # or the future was cancelled, which means waiters will get the
+                    # CancelledError from asyncio.shield. 
+                    or fut.cancelled()
+                    # There are no more waiters, which means fut will be garbage collected as
+                    # soon as we delete this reference and is not expected to produce a result.
+                    or not fut._waiters
+                ):
                     # We do not need to process this item.
-                    task_done()
-                    continue
-
-                if fut.cancelled():
-                    # The future was cancelled, which means the waiters will all get the
-                    # CancelledError from asyncio.shield. We do not need to process this item.
                     task_done()
                     continue
 
