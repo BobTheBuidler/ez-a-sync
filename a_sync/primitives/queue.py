@@ -908,6 +908,12 @@ class SmartProcessingQueue(_VariablePriorityQueueMixin[T], ProcessingQueue[Conca
                     task_done()
                     continue
 
+                if fut.cancelled():
+                    # The future was cancelled, which means the waiters will all get the
+                    # CancelledError from asyncio.shield. We do not need to process this item.
+                    task_done()
+                    continue
+
                 log("processing %s", fut)
 
                 # TODO: implement some callback to handle cancellation
