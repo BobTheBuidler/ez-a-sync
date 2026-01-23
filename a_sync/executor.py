@@ -36,7 +36,7 @@ from a_sync.primitives._debug import _DebugDaemonMixin
 # Signal handlers are chainable: after our cleanup, the previous handler is called (unless SIG_DFL or SIG_IGN).
 # This ensures compatibility with other libraries and deduplicates shutdown logic.
 
-_EXECUTORS = set()
+_EXECUTORS: "weakref.WeakSet[AsyncExecutor]" = weakref.WeakSet()
 
 
 def register_executor(executor) -> None:
