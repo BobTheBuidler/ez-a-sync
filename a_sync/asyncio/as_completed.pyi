@@ -26,6 +26,7 @@ def as_completed(
 ) -> Iterator[Coroutine[Any, Any, T]]:
     """
     Concurrently awaits a list of awaitable objects or mappings of awaitables and returns an iterator of results.
+    Overload: iterable awaitables -> sync iterator of coroutines.
 
     This function extends Python's :func:`asyncio.as_completed`, providing additional features for mixed use cases of individual awaitable objects and mappings of awaitables.
 
@@ -39,10 +40,10 @@ def as_completed(
         The `return_exceptions` parameter is used to wrap awaitables with exceptions if set to True, allowing exceptions to be returned as results instead of being raised.
 
     Args:
-        fs: The awaitables to await concurrently. It can be a list of individual awaitables or a mapping of awaitables.
+        fs: The awaitables to await concurrently. It must be an iterable of awaitables.
         timeout: The maximum time, in seconds, to wait for the completion of awaitables. Defaults to None (no timeout).
         return_exceptions: If True, exceptions are wrapped and returned as results instead of raising them. Defaults to False.
-        aiter: If True, returns an async iterator of results using :class:`ASyncIterator`. Defaults to False.
+        aiter: If True, returns an async iterator of results using :class:`ASyncIterator`. This overload requires False.
         tqdm: If True, enables progress reporting using :mod:`tqdm`. Defaults to False.
         **tqdm_kwargs: Additional keyword arguments for :mod:`tqdm` if progress reporting is enabled.
 
@@ -86,6 +87,7 @@ def as_completed(
 ) -> ASyncIterator[T]:
     """
     Concurrently awaits a list of awaitable objects or mappings of awaitables and returns an iterator of results.
+    Overload: iterable awaitables -> async iterator of results.
 
     This function extends Python's :func:`asyncio.as_completed`, providing additional features for mixed use cases of individual awaitable objects and mappings of awaitables.
 
@@ -99,10 +101,10 @@ def as_completed(
         The `return_exceptions` parameter is used to wrap awaitables with exceptions if set to True, allowing exceptions to be returned as results instead of being raised.
 
     Args:
-        fs: The awaitables to await concurrently. It can be a list of individual awaitables or a mapping of awaitables.
+        fs: The awaitables to await concurrently. It must be an iterable of awaitables.
         timeout: The maximum time, in seconds, to wait for the completion of awaitables. Defaults to None (no timeout).
         return_exceptions: If True, exceptions are wrapped and returned as results instead of raising them. Defaults to False.
-        aiter: If True, returns an async iterator of results using :class:`ASyncIterator`. Defaults to False.
+        aiter: If True, returns an async iterator of results using :class:`ASyncIterator`. This overload requires True.
         tqdm: If True, enables progress reporting using :mod:`tqdm`. Defaults to False.
         **tqdm_kwargs: Additional keyword arguments for :mod:`tqdm` if progress reporting is enabled.
 
@@ -146,6 +148,7 @@ def as_completed(
 ) -> Iterator[Coroutine[Any, Any, tuple[K, V]]]:
     """
     Concurrently awaits a list of awaitable objects or mappings of awaitables and returns an iterator of results.
+    Overload: mapping awaitables -> sync iterator of (key, value) coroutines.
 
     This function extends Python's :func:`asyncio.as_completed`, providing additional features for mixed use cases of individual awaitable objects and mappings of awaitables.
 
@@ -159,10 +162,10 @@ def as_completed(
         The `return_exceptions` parameter is used to wrap awaitables with exceptions if set to True, allowing exceptions to be returned as results instead of being raised.
 
     Args:
-        fs: The awaitables to await concurrently. It can be a list of individual awaitables or a mapping of awaitables.
+        fs: The awaitables to await concurrently. It must be a mapping of awaitables.
         timeout: The maximum time, in seconds, to wait for the completion of awaitables. Defaults to None (no timeout).
         return_exceptions: If True, exceptions are wrapped and returned as results instead of raising them. Defaults to False.
-        aiter: If True, returns an async iterator of results using :class:`ASyncIterator`. Defaults to False.
+        aiter: If True, returns an async iterator of results using :class:`ASyncIterator`. This overload requires False.
         tqdm: If True, enables progress reporting using :mod:`tqdm`. Defaults to False.
         **tqdm_kwargs: Additional keyword arguments for :mod:`tqdm` if progress reporting is enabled.
 
@@ -206,6 +209,7 @@ def as_completed(
 ) -> ASyncIterator[tuple[K, V]]:
     """
     Concurrently awaits a list of awaitable objects or mappings of awaitables and returns an iterator of results.
+    Overload: mapping awaitables -> async iterator of (key, value) results.
 
     This function extends Python's :func:`asyncio.as_completed`, providing additional features for mixed use cases of individual awaitable objects and mappings of awaitables.
 
@@ -219,10 +223,10 @@ def as_completed(
         The `return_exceptions` parameter is used to wrap awaitables with exceptions if set to True, allowing exceptions to be returned as results instead of being raised.
 
     Args:
-        fs: The awaitables to await concurrently. It can be a list of individual awaitables or a mapping of awaitables.
+        fs: The awaitables to await concurrently. It must be a mapping of awaitables.
         timeout: The maximum time, in seconds, to wait for the completion of awaitables. Defaults to None (no timeout).
         return_exceptions: If True, exceptions are wrapped and returned as results instead of raising them. Defaults to False.
-        aiter: If True, returns an async iterator of results using :class:`ASyncIterator`. Defaults to False.
+        aiter: If True, returns an async iterator of results using :class:`ASyncIterator`. This overload requires True.
         tqdm: If True, enables progress reporting using :mod:`tqdm`. Defaults to False.
         **tqdm_kwargs: Additional keyword arguments for :mod:`tqdm` if progress reporting is enabled.
 
