@@ -17,11 +17,12 @@ import asyncio
 import sys
 from asyncio import AbstractEventLoop, Future, InvalidStateError, QueueEmpty, Task
 from asyncio.events import _get_running_loop
+from collections import deque
 from collections.abc import Awaitable, Callable
 from functools import wraps
 from heapq import heappop, heappush, heappushpop
 from logging import getLogger
-from typing import Any, Concatenate, Final, Generic, Literal, NoReturn
+from typing import TYPE_CHECKING, Any, Concatenate, Final, Generic, Literal, NoReturn
 from weakref import WeakValueDictionary, proxy, ref
 
 from a_sync._smart import SmartFuture
@@ -66,6 +67,7 @@ class Queue(asyncio.Queue[T]):
         "_unfinished_tasks",
         "_finished",
     )
+    _queue: deque[T]
 
     def __bool__(self) -> Literal[True]:
         """A Queue will always exist, even without items."""
@@ -136,7 +138,7 @@ class Queue(asyncio.Queue[T]):
         get_next = self.get
         get_multi = self.get_multi_nowait
 
-        items = []
+        items: list[T] = []
         extend = items.extend
         while len(items) < i and not can_return_less:
             try:
@@ -164,7 +166,7 @@ class Queue(asyncio.Queue[T]):
 
         get_nowait = self.get_nowait
 
-        items = []
+        items: list[T] = []
         append = items.append
         for _ in range(i):
             try:
@@ -180,7 +182,9 @@ class Queue(asyncio.Queue[T]):
         return items
 
 
-def log_broken(func: Callable[[Any], NoReturn]) -> Callable[[Any], NoReturn]:
+def log_broken(
+    func: Callable[[Any], Awaitable[NoReturn]],
+) -> Callable[[Any], Awaitable[NoReturn]]:
     @wraps(func)
     async def __worker_exc_wrap(self: "ProcessingQueue"):
         try:
@@ -193,7 +197,7 @@ def log_broken(func: Callable[[Any], NoReturn]) -> Callable[[Any], NoReturn]:
     return __worker_exc_wrap
 
 
-_init = asyncio.Queue.__init__
+_init: Callable[..., None] = asyncio.Queue.__init__
 _put_nowait = asyncio.Queue.put_nowait
 _loop_kwarg_deprecated = sys.version_info >= (3, 10)
 
@@ -218,6 +222,13 @@ class ProcessingQueue(asyncio.Queue[tuple[P, "Future[V]"]], Generic[P, V]):
     """Indicates whether the queue is closed."""
 
     __slots__ = "func", "num_workers"
+    if TYPE_CHECKING:
+        _unfinished_tasks: int
+        _putters: deque[Future[Any]]
+
+        def _get_loop(self) -> AbstractEventLoop: ...
+
+        def _wakeup_next(self, waiters: deque[Future[Any]]) -> None: ...
 
     def __init__(
         self,
@@ -441,8 +452,6 @@ class ProcessingQueue(asyncio.Queue[tuple[P, "Future[V]"]], Generic[P, V]):
         func = self.func
         task_done = self.task_done
 
-        args: P.args
-        kwargs: P.kwargs
         if self._no_futs:
             while True:
                 try:
@@ -890,8 +899,6 @@ class SmartProcessingQueue(_VariablePriorityQueueMixin[T], ProcessingQueue[Conca
         task_done = self.task_done
         log = log_debug
 
-        args: P.args
-        kwargs: P.kwargs
         fut: SmartFuture[V]
         try:
             while True:

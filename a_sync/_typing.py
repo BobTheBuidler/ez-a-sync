@@ -68,7 +68,16 @@ import asyncio
 from collections.abc import AsyncIterable, Awaitable, Callable, Coroutine, Iterable
 from concurrent.futures._base import Executor
 from decimal import Decimal
-from typing import TYPE_CHECKING, Any, Literal, Protocol, TypedDict, TypeVar, runtime_checkable
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    Literal,
+    Protocol,
+    TypedDict,
+    TypeAlias,
+    TypeVar,
+    runtime_checkable,
+)
 
 from typing_extensions import ParamSpec
 
@@ -94,10 +103,10 @@ P = ParamSpec("P")
 Numeric = int | float | Decimal
 """Type alias for numeric values of types int, float, or Decimal."""
 
-MaybeAwaitable = Awaitable[T] | T
+MaybeAwaitable: TypeAlias = Awaitable[T] | T
 """Type alias for values that may or may not be awaitable. Useful for functions that can return either an awaitable or a direct value."""
 
-MaybeCoro = Coroutine[Any, Any, T] | T
+MaybeCoro: TypeAlias = Coroutine[Any, Any, T] | T
 "Type alias for values that may or may not be coroutine."
 
 CoroFn = Callable[P, Awaitable[T]]

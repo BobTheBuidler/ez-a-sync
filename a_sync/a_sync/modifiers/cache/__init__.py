@@ -151,7 +151,7 @@ def apply_async_cache(
         raise exceptions.FunctionNotAsync(coro_fn)
 
     if cache_type == "memory":
-        cache_decorator = apply_async_memory_cache(
+        cache_decorator: AsyncDecorator[P, T] = apply_async_memory_cache(
             maxsize=ram_cache_maxsize, ttl=ram_cache_ttl, typed=cache_typed
         )
         return cache_decorator if coro_fn is None else cache_decorator(coro_fn)
