@@ -73,13 +73,6 @@ async def gather(
         :func:`asyncio.gather`
     """
 
-async def gather(
-    *awaitables: Awaitable[T] | Mapping[K, Awaitable[V]],
-    return_exceptions: bool = False,
-    exclude_if: Excluder[T] | None = None,
-    tqdm: bool = False,
-    **tqdm_kwargs: Any
-) -> list[T] | dict[K, V]: ...
 async def gather_mapping(
     mapping: Mapping[K, Awaitable[V]],
     return_exceptions: bool = False,

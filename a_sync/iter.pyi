@@ -60,7 +60,7 @@ class _AwaitableAsyncIterableMixin(AsyncIterable[T]):
             A list of the {obj} yielded by the {cls}.
         """
 
-    def sort(self, *, key: SortKey[T] = None, reverse: bool = False) -> ASyncSorter[T]:
+    def sort(self, *, key: SortKey[T] | None = None, reverse: bool = False) -> ASyncSorter[T]:
         """
         Sort the {obj} yielded by the {cls}.
 
@@ -330,7 +330,11 @@ class ASyncSorter(_ASyncView[T]):
 
     reversed: bool
     def __init__(
-        self, iterable: AsyncIterable[T], *, key: SortKey[T] = None, reverse: bool = False
+        self,
+        iterable: AsyncIterable[T],
+        *,
+        key: SortKey[T] | None = None,
+        reverse: bool = False,
     ) -> None:
         """
         Initializes the ASyncSorter with an iterable and an optional sorting configuration (key function, and reverse flag).

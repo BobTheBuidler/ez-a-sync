@@ -43,7 +43,7 @@ logger = getLogger(__name__)
 MappingFn = Callable[Concatenate[K, P], Awaitable[V]]
 
 
-_args = WeakKeyDictionary()
+_args: WeakKeyDictionary[Any, list[str]] = WeakKeyDictionary()
 
 
 class TaskMapping(DefaultDict[K, Task[V]], AsyncIterable[tuple[K, V]]):
@@ -253,7 +253,7 @@ class TaskMapping(DefaultDict[K, Task[V]], AsyncIterable[tuple[K, V]]):
         self._if_pop_check_destroyed(pop)
 
         # if you inited the TaskMapping with some iterators, we will load those
-        yielded = set()
+        yielded: set[K] = set()
         add_yielded = yielded.add
         try:
             if self._init_loader is None:
@@ -749,7 +749,7 @@ async def _yield_keys(iterable: AnyIterableOrAwaitableIterable[K]) -> AsyncItera
         raise TypeError(iterable)
 
 
-__unwrapped = WeakKeyDictionary()
+__unwrapped: WeakKeyDictionary[Any, Any] = WeakKeyDictionary()
 
 
 def _unwrap(
@@ -834,7 +834,7 @@ class TaskMappingKeys(_TaskMappingView[K, K, V], Generic[K, V]):
         # strongref
         mapping = self.__mapping__
         mapping._if_pop_check_destroyed(self._pop)
-        yielded = set()
+        yielded: set[K] = set()
         add_yielded = yielded.add
         for key in self.__load_existing():
             add_yielded(key)
