@@ -25,7 +25,6 @@ def as_completed(
     **tqdm_kwargs: Any
 ) -> Iterator[Coroutine[Any, Any, T]]:
     """Yield coroutines as awaitables complete (sync iterator)."""
-    ...
 @overload
 def as_completed(
     fs: Iterable[Awaitable[T]],
@@ -37,7 +36,6 @@ def as_completed(
     **tqdm_kwargs: Any
 ) -> ASyncIterator[T]:
     """Yield values as awaitables complete (async iterator)."""
-    ...
 @overload
 def as_completed(
     fs: Mapping[K, Awaitable[V]],
@@ -49,7 +47,6 @@ def as_completed(
     **tqdm_kwargs: Any
 ) -> Iterator[Coroutine[Any, Any, tuple[K, V]]]:
     """Yield key/value coroutines as awaitables complete (sync iterator)."""
-    ...
 @overload
 def as_completed(
     fs: Mapping[K, Awaitable[V]],
@@ -61,4 +58,3 @@ def as_completed(
     **tqdm_kwargs: Any
 ) -> ASyncIterator[tuple[K, V]]:
     """Yield key/value results as awaitables complete (async iterator)."""
-    ...
