@@ -1,3 +1,7 @@
+# ez-a-sync
+
+[![CodSpeed](https://img.shields.io/endpoint?url=https://codspeed.io/badge.json?utm_source=badge)](https://codspeed.io/BobTheBuidler/ez-a-sync?utm_source=badge)
+
 ## Table of Contents
 <!-- TOC -->
 

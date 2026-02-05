@@ -1,6 +1,7 @@
 cython>=3.0.11
 pytest
 pytest-asyncio-cooperative
+pytest-codspeed==4.2.0
 pytest-cov
 setuptools
 tqdm
