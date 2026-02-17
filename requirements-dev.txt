@@ -1,5 +1,5 @@
 cython>=3.0.11
-mypy
+mypy==1.19.1
 pytest
 pytest-asyncio-cooperative
 pytest-cov
