@@ -26,12 +26,13 @@ TODO include comparisons between the 'new way' with this future class and the 'o
 """
 
 import concurrent.futures
+import sys
 from asyncio import Future, Task, get_event_loop
 from collections.abc import Awaitable, Callable, Generator
 from decimal import Decimal
 from functools import partial, wraps
 from inspect import isawaitable
-from typing import TYPE_CHECKING, Any, Generic, Union, final, overload
+from typing import TYPE_CHECKING, Any, Coroutine, Generic, Union, final, overload
 
 from typing_extensions import Self, Unpack
 
@@ -345,643 +346,133 @@ class ASyncFuture(concurrent.futures.Future, Awaitable[T]):
             key: The key to check.
 
         Returns:
-            True if the key is in the materialized result, False otherwise.
+            True if the key is in the materialized result.
 
         Example:
             >>> future = ASyncFuture(asyncio.sleep(1, result={'key': 'value'}))
             >>> 'key' in future
             True
         """
-        return _materialize(
-            ASyncFuture(self.__contains(key), dependencies=self.__list_dependencies(key))
-        )
+        return key in _materialize(self)
 
-    def __await__(self) -> Generator[Any, None, T]:
+    # NOTE: broken, do not use. I think
+    def __delitem__(self, key) -> None:
         """
-        Makes the `ASyncFuture` awaitable.
-
-        Example:
-            >>> future = ASyncFuture(asyncio.sleep(1, result=42))
-            >>> await future
-            42
-        """
-        return self.__await().__await__()
-
-    async def __await(self) -> T:
-        if not self.done():
-            self.set_result(await self.__task__)
-        return self._result
-
-    @property
-    def __task__(self) -> "Task[T]":
-        """
-        Returns the asyncio task associated with the awaitable, creating it if necessary.
-
-        Example:
-            >>> future = ASyncFuture(asyncio.sleep(1, result=42))
-            >>> task = future.__task__
-            >>> isinstance(task, asyncio.Task)
-            True
-        """
-        if self.__task is None:
-            self.__task = create_task(self.__awaitable__)
-        return self.__task
-
-    def __iter__(self):
-        """
-        Returns an iterator for the materialized result.
-
-        Example:
-            >>> future = ASyncFuture(asyncio.sleep(1, result=[1, 2, 3]))
-            >>> for item in future:
-            ...     print(item)
-            1
-            2
-            3
-        """
-        return _materialize(self).__iter__()
-
-    def __next__(self):
-        """
-        Returns the next item from the materialized result.
-
-        Example:
-            >>> future = ASyncFuture(asyncio.sleep(1, result=iter([1, 2, 3])))
-            >>> next(future)
-            1
-        """
-        return _materialize(self).__next__()
-
-    def __enter__(self):
-        """
-        Enters the context of the materialized result.
-
-        Example:
-            >>> class SomeContext:
-            ...     def __enter__(self):
-            ...         return self
-            ...     def __exit__(self, exc_type, exc_val, exc_tb):
-            ...         pass
-            >>> future = ASyncFuture(asyncio.sleep(1, result=SomeContext()))
-            >>> with future as context:
-            ...     context.do_something()
-        """
-        return _materialize(self).__enter__()
-
-    def __exit__(self, *args):
-        """
-        Exits the context of the materialized result.
-
-        Example:
-            >>> class SomeContext:
-            ...     def __enter__(self):
-            ...         return self
-            ...     def __exit__(self, exc_type, exc_val, exc_tb):
-            ...         pass
-            >>> future = ASyncFuture(asyncio.sleep(1, result=SomeContext()))
-            >>> with future as context:
-            ...     pass
-            >>> # Context is exited here
-        """
-        return _materialize(self).__exit__(*args)
-
-    @overload
-    def __add__(self: "ASyncFuture[int]", other: int) -> "ASyncFuture[int]": ...
-
-    @overload
-    def __add__(self: "ASyncFuture[float]", other: float) -> "ASyncFuture[float]": ...
-
-    @overload
-    def __add__(self: "ASyncFuture[float]", other: int) -> "ASyncFuture[float]": ...
-
-    @overload
-    def __add__(self: "ASyncFuture[int]", other: float) -> "ASyncFuture[float]": ...
-
-    @overload
-    def __add__(self: "ASyncFuture[Decimal]", other: Decimal) -> "ASyncFuture[Decimal]": ...
-
-    @overload
-    def __add__(self: "ASyncFuture[Decimal]", other: int) -> "ASyncFuture[Decimal]": ...
-
-    @overload
-    def __add__(self: "ASyncFuture[int]", other: Decimal) -> "ASyncFuture[Decimal]": ...
-
-    @overload
-    def __add__(self: "ASyncFuture[int]", other: Awaitable[int]) -> "ASyncFuture[int]": ...
-
-    @overload
-    def __add__(self: "ASyncFuture[float]", other: Awaitable[float]) -> "ASyncFuture[float]": ...
-
-    @overload
-    def __add__(self: "ASyncFuture[float]", other: Awaitable[int]) -> "ASyncFuture[float]": ...
-
-    @overload
-    def __add__(self: "ASyncFuture[int]", other: Awaitable[float]) -> "ASyncFuture[float]": ...
-
-    @overload
-    def __add__(
-        self: "ASyncFuture[Decimal]", other: Awaitable[Decimal]
-    ) -> "ASyncFuture[Decimal]": ...
-
-    @overload
-    def __add__(self: "ASyncFuture[Decimal]", other: Awaitable[int]) -> "ASyncFuture[Decimal]": ...
-
-    @overload
-    def __add__(self: "ASyncFuture[int]", other: Awaitable[Decimal]) -> "ASyncFuture[Decimal]": ...
-
-    def __add__(self, other: MetaNumeric) -> "ASyncFuture":
-        """
-        Adds the result of this `ASyncFuture` to another value or `ASyncFuture`.
+        Allows deleting an item from the materialized result.
 
         Args:
-            other: The value or `ASyncFuture` to add.
-
-        Returns:
-            A new `ASyncFuture` representing the sum.
+            key: The key to delete.
 
         Example:
-            >>> future1 = ASyncFuture(asyncio.sleep(1, result=10))
-            >>> future2 = ASyncFuture(asyncio.sleep(1, result=5))
-            >>> result = future1 + future2
-            >>> await result
-            15
+            >>> future = ASyncFuture(asyncio.sleep(1, result={'key': 'value'}))
+            >>> del future['key']
         """
+        del _materialize(self)[key]
+
+    async def __await__(self) -> Generator[Any, None, T]:
+        try:
+            result = await self.__awaitable__
+        except Exception as exc:
+            self.set_exception(exc)
+            raise
+        else:
+            self.set_result(result)
+            return result
+
+    async def __call__(self, *args, **kwargs) -> Any:
+        return await self.__awaitable__(*args, **kwargs)
+
+    def __iadd__(self, other) -> "ASyncFuture":
+        other = ASyncFuture(other, dependencies=self.__list_dependencies(other))
         return ASyncFuture(self.__add(other), dependencies=self.__list_dependencies(other))
 
-    @overload
-    def __sub__(self: "ASyncFuture[int]", other: int) -> "ASyncFuture[int]": ...
+    def __add__(self, other) -> "ASyncFuture":
+        other = ASyncFuture(other, dependencies=self.__list_dependencies(other))
+        return ASyncFuture(self.__add(other), dependencies=self.__list_dependencies(other))
 
-    @overload
-    def __sub__(self: "ASyncFuture[float]", other: float) -> "ASyncFuture[float]": ...
-
-    @overload
-    def __sub__(self: "ASyncFuture[float]", other: int) -> "ASyncFuture[float]": ...
-
-    @overload
-    def __sub__(self: "ASyncFuture[int]", other: float) -> "ASyncFuture[float]": ...
-
-    @overload
-    def __sub__(self: "ASyncFuture[Decimal]", other: Decimal) -> "ASyncFuture[Decimal]": ...
-
-    @overload
-    def __sub__(self: "ASyncFuture[Decimal]", other: int) -> "ASyncFuture[Decimal]": ...
-
-    @overload
-    def __sub__(self: "ASyncFuture[int]", other: Decimal) -> "ASyncFuture[Decimal]": ...
-
-    @overload
-    def __sub__(self: "ASyncFuture[int]", other: Awaitable[int]) -> "ASyncFuture[int]": ...
-
-    @overload
-    def __sub__(self: "ASyncFuture[float]", other: Awaitable[float]) -> "ASyncFuture[float]": ...
-
-    @overload
-    def __sub__(self: "ASyncFuture[float]", other: Awaitable[int]) -> "ASyncFuture[float]": ...
-
-    @overload
-    def __sub__(self: "ASyncFuture[int]", other: Awaitable[float]) -> "ASyncFuture[float]": ...
-
-    @overload
-    def __sub__(
-        self: "ASyncFuture[Decimal]", other: Awaitable[Decimal]
-    ) -> "ASyncFuture[Decimal]": ...
-
-    @overload
-    def __sub__(self: "ASyncFuture[Decimal]", other: Awaitable[int]) -> "ASyncFuture[Decimal]": ...
-
-    @overload
-    def __sub__(self: "ASyncFuture[int]", other: Awaitable[Decimal]) -> "ASyncFuture[Decimal]": ...
-
-    def __sub__(self, other: MetaNumeric) -> "ASyncFuture":
-        """
-        Subtracts another value or `ASyncFuture` from the result of this `ASyncFuture`.
-
-        Args:
-            other: The value or `ASyncFuture` to subtract.
-
-        Returns:
-            A new `ASyncFuture` representing the difference.
-
-        Example:
-            >>> future1 = ASyncFuture(asyncio.sleep(1, result=10))
-            >>> future2 = ASyncFuture(asyncio.sleep(1, result=5))
-            >>> result = future1 - future2
-            >>> await result
-            5
-        """
+    def __isub__(self, other) -> "ASyncFuture":
+        other = ASyncFuture(other, dependencies=self.__list_dependencies(other))
         return ASyncFuture(self.__sub(other), dependencies=self.__list_dependencies(other))
 
-    def __mul__(self, other) -> "ASyncFuture":
-        """
-        Multiplies the result of this `ASyncFuture` by another value or `ASyncFuture`.
+    def __sub__(self, other) -> "ASyncFuture":
+        other = ASyncFuture(other, dependencies=self.__list_dependencies(other))
+        return ASyncFuture(self.__sub(other), dependencies=self.__list_dependencies(other))
 
-        Args:
-            other: The value or `ASyncFuture` to multiply.
-
-        Returns:
-            A new `ASyncFuture` representing the product.
-
-        Example:
-            >>> future1 = ASyncFuture(asyncio.sleep(1, result=10))
-            >>> future2 = ASyncFuture(asyncio.sleep(1, result=5))
-            >>> result = future1 * future2
-            >>> await result
-            50
-        """
+    def __imul__(self, other) -> "ASyncFuture":
+        other = ASyncFuture(other, dependencies=self.__list_dependencies(other))
         return ASyncFuture(self.__mul(other), dependencies=self.__list_dependencies(other))
 
-    def __pow__(self, other) -> "ASyncFuture":
-        """
-        Raises the result of this `ASyncFuture` to the power of another value or `ASyncFuture`.
+    def __mul__(self, other) -> "ASyncFuture":
+        other = ASyncFuture(other, dependencies=self.__list_dependencies(other))
+        return ASyncFuture(self.__mul(other), dependencies=self.__list_dependencies(other))
 
-        Args:
-            other: The exponent value or `ASyncFuture`.
-
-        Returns:
-            A new `ASyncFuture` representing the power.
-
-        Example:
-            >>> future1 = ASyncFuture(asyncio.sleep(1, result=2))
-            >>> future2 = ASyncFuture(asyncio.sleep(1, result=3))
-            >>> result = future1 ** future2
-            >>> await result
-            8
-        """
-        return ASyncFuture(self.__pow(other), dependencies=self.__list_dependencies(other))
-
-    def __truediv__(self, other) -> "ASyncFuture":
-        """
-        Divides the result of this `ASyncFuture` by another value or `ASyncFuture`.
-
-        Args:
-            other: The divisor value or `ASyncFuture`.
-
-        Returns:
-            A new `ASyncFuture` representing the quotient.
-
-        Example:
-            >>> future1 = ASyncFuture(asyncio.sleep(1, result=10))
-            >>> future2 = ASyncFuture(asyncio.sleep(1, result=2))
-            >>> result = future1 / future2
-            >>> await result
-            5.0
-        """
+    def __itruediv__(self, other) -> "ASyncFuture":
+        other = ASyncFuture(other, dependencies=self.__list_dependencies(other))
         return ASyncFuture(self.__truediv(other), dependencies=self.__list_dependencies(other))
 
-    def __floordiv__(self, other) -> "ASyncFuture":
-        """
-        Performs floor division of the result of this `ASyncFuture` by another value or `ASyncFuture`.
+    def __truediv__(self, other) -> "ASyncFuture":
+        other = ASyncFuture(other, dependencies=self.__list_dependencies(other))
+        return ASyncFuture(self.__truediv(other), dependencies=self.__list_dependencies(other))
 
-        Args:
-            other: The divisor value or `ASyncFuture`.
-
-        Returns:
-            A new `ASyncFuture` representing the floor division result.
-
-        Example:
-            >>> future1 = ASyncFuture(asyncio.sleep(1, result=10))
-            >>> future2 = ASyncFuture(asyncio.sleep(1, result=3))
-            >>> result = future1 // future2
-            >>> await result
-            3
-        """
+    def __ifloordiv__(self, other) -> "ASyncFuture":
+        other = ASyncFuture(other, dependencies=self.__list_dependencies(other))
         return ASyncFuture(self.__floordiv(other), dependencies=self.__list_dependencies(other))
 
-    def __pow__(self, other) -> "ASyncFuture":
-        """
-        Raises the result of this `ASyncFuture` to the power of another value or `ASyncFuture`.
+    def __floordiv__(self, other) -> "ASyncFuture":
+        other = ASyncFuture(other, dependencies=self.__list_dependencies(other))
+        return ASyncFuture(self.__floordiv(other), dependencies=self.__list_dependencies(other))
 
-        Args:
-            other: The exponent value or `ASyncFuture`.
-
-        Returns:
-            A new `ASyncFuture` representing the power.
-
-        Example:
-            >>> future1 = ASyncFuture(asyncio.sleep(1, result=2))
-            >>> future2 = ASyncFuture(asyncio.sleep(1, result=3))
-            >>> result = future1 ** future2
-            >>> await result
-            8
-        """
+    def __ipow__(self, other) -> "ASyncFuture":
+        other = ASyncFuture(other, dependencies=self.__list_dependencies(other))
         return ASyncFuture(self.__pow(other), dependencies=self.__list_dependencies(other))
 
-    @overload
-    def __radd__(self: "ASyncFuture[int]", other: int) -> "ASyncFuture[int]": ...
+    def __pow__(self, other) -> "ASyncFuture":
+        other = ASyncFuture(other, dependencies=self.__list_dependencies(other))
+        return ASyncFuture(self.__pow(other), dependencies=self.__list_dependencies(other))
+
+    async def __add(self, other) -> "Any":
+        a, b = await _gather_check_and_materialize(self, other)
+        return a + b
 
     @overload
-    def __radd__(self: "ASyncFuture[float]", other: float) -> "ASyncFuture[float]": ...
+    async def __add(
+        self: "ASyncFuture[int]", other: int
+    ) -> "ASyncFuture[int]": ...
 
     @overload
-    def __radd__(self: "ASyncFuture[float]", other: int) -> "ASyncFuture[float]": ...
+    async def __add(
+        self: "ASyncFuture[float]", other: float
+    ) -> "ASyncFuture[float]": ...
 
     @overload
-    def __radd__(self: "ASyncFuture[int]", other: float) -> "ASyncFuture[float]": ...
+    async def __add(
+        self: "ASyncFuture[float]", other: int
+    ) -> "ASyncFuture[float]": ...
 
     @overload
-    def __radd__(self: "ASyncFuture[Decimal]", other: Decimal) -> "ASyncFuture[Decimal]": ...
+    async def __add(
+        self: "ASyncFuture[int]", other: float
+    ) -> "ASyncFuture[float]": ...
 
     @overload
-    def __radd__(self: "ASyncFuture[Decimal]", other: int) -> "ASyncFuture[Decimal]": ...
-
-    @overload
-    def __radd__(self: "ASyncFuture[int]", other: Decimal) -> "ASyncFuture[Decimal]": ...
-
-    @overload
-    def __radd__(self: "ASyncFuture[int]", other: Awaitable[int]) -> "ASyncFuture[int]": ...
-
-    @overload
-    def __radd__(self: "ASyncFuture[float]", other: Awaitable[float]) -> "ASyncFuture[float]": ...
-
-    @overload
-    def __radd__(self: "ASyncFuture[float]", other: Awaitable[int]) -> "ASyncFuture[float]": ...
-
-    @overload
-    def __radd__(self: "ASyncFuture[int]", other: Awaitable[float]) -> "ASyncFuture[float]": ...
-
-    @overload
-    def __radd__(
-        self: "ASyncFuture[Decimal]", other: Awaitable[Decimal]
+    async def __add(
+        self: "ASyncFuture[Decimal]", other: Decimal
     ) -> "ASyncFuture[Decimal]": ...
 
     @overload
-    def __radd__(self: "ASyncFuture[Decimal]", other: Awaitable[int]) -> "ASyncFuture[Decimal]": ...
-
-    @overload
-    def __radd__(self: "ASyncFuture[int]", other: Awaitable[Decimal]) -> "ASyncFuture[Decimal]": ...
-
-    def __radd__(self, other) -> "ASyncFuture":
-        """
-        Adds another value or `ASyncFuture` to the result of this `ASyncFuture`.
-
-        Args:
-            other: The value or `ASyncFuture` to add.
-
-        Returns:
-            A new `ASyncFuture` representing the sum.
-
-        Example:
-            >>> future1 = ASyncFuture(asyncio.sleep(1, result=10))
-            >>> result = 5 + future1
-            >>> await result
-            15
-        """
-        return ASyncFuture(self.__radd(other), dependencies=self.__list_dependencies(other))
-
-    @overload
-    def __rsub__(self: "ASyncFuture[int]", other: int) -> "ASyncFuture[int]": ...
-
-    @overload
-    def __rsub__(self: "ASyncFuture[float]", other: float) -> "ASyncFuture[float]": ...
-
-    @overload
-    def __rsub__(self: "ASyncFuture[float]", other: int) -> "ASyncFuture[float]": ...
-
-    @overload
-    def __rsub__(self: "ASyncFuture[int]", other: float) -> "ASyncFuture[float]": ...
-
-    @overload
-    def __rsub__(self: "ASyncFuture[Decimal]", other: Decimal) -> "ASyncFuture[Decimal]": ...
-
-    @overload
-    def __rsub__(self: "ASyncFuture[Decimal]", other: int) -> "ASyncFuture[Decimal]": ...
-
-    @overload
-    def __rsub__(self: "ASyncFuture[int]", other: Decimal) -> "ASyncFuture[Decimal]": ...
-
-    @overload
-    def __rsub__(self: "ASyncFuture[int]", other: Awaitable[int]) -> "ASyncFuture[int]": ...
-
-    @overload
-    def __rsub__(self: "ASyncFuture[float]", other: Awaitable[float]) -> "ASyncFuture[float]": ...
-
-    @overload
-    def __rsub__(self: "ASyncFuture[float]", other: Awaitable[int]) -> "ASyncFuture[float]": ...
-
-    @overload
-    def __rsub__(self: "ASyncFuture[int]", other: Awaitable[float]) -> "ASyncFuture[float]": ...
-
-    @overload
-    def __rsub__(
-        self: "ASyncFuture[Decimal]", other: Awaitable[Decimal]
+    async def __add(
+        self: "ASyncFuture[Decimal]", other: int
     ) -> "ASyncFuture[Decimal]": ...
 
     @overload
-    def __rsub__(self: "ASyncFuture[Decimal]", other: Awaitable[int]) -> "ASyncFuture[Decimal]": ...
+    async def __add(
+        self: "ASyncFuture[int]", other: Decimal
+    ) -> "ASyncFuture[Decimal]": ...
 
     @overload
-    def __rsub__(self: "ASyncFuture[int]", other: Awaitable[Decimal]) -> "ASyncFuture[Decimal]": ...
-
-    def __rsub__(self, other) -> "ASyncFuture":
-        """
-        Subtracts the result of this `ASyncFuture` from another value or `ASyncFuture`.
-
-        Args:
-            other: The value or `ASyncFuture` to subtract from.
-
-        Returns:
-            A new `ASyncFuture` representing the difference.
-
-        Example:
-            >>> future1 = ASyncFuture(asyncio.sleep(1, result=10))
-            >>> result = 20 - future1
-            >>> await result
-            10
-        """
-        return ASyncFuture(self.__rsub(other), dependencies=self.__list_dependencies(other))
-
-    def __rmul__(self, other) -> "ASyncFuture":
-        """
-        Multiplies another value or `ASyncFuture` by the result of this `ASyncFuture`.
-
-        Args:
-            other: The value or `ASyncFuture` to multiply.
-
-        Returns:
-            A new `ASyncFuture` representing the product.
-
-        Example:
-            >>> future1 = ASyncFuture(asyncio.sleep(1, result=10))
-            >>> result = 2 * future1
-            >>> await result
-            20
-        """
-        return ASyncFuture(self.__rmul(other), dependencies=self.__list_dependencies(other))
-
-    def __rtruediv__(self, other) -> "ASyncFuture":
-        """
-        Divides another value or `ASyncFuture` by the result of this `ASyncFuture`.
-
-        Args:
-            other: The value or `ASyncFuture` to divide.
-
-        Returns:
-            A new `ASyncFuture` representing the quotient.
-
-        Example:
-            >>> future1 = ASyncFuture(asyncio.sleep(1, result=2))
-            >>> result = 10 / future1
-            >>> await result
-            5.0
-        """
-        return ASyncFuture(self.__rtruediv(other), dependencies=self.__list_dependencies(other))
-
-    def __rfloordiv__(self, other) -> "ASyncFuture":
-        """
-        Performs floor division of another value or `ASyncFuture` by the result of this `ASyncFuture`.
-
-        Args:
-            other: The value or `ASyncFuture` to divide.
-
-        Returns:
-            A new `ASyncFuture` representing the floor division result.
-
-        Example:
-            >>> future1 = ASyncFuture(asyncio.sleep(1, result=3))
-            >>> result = 10 // future1
-            >>> await result
-            3
-        """
-        return ASyncFuture(self.__rfloordiv(other), dependencies=self.__list_dependencies(other))
-
-    def __rpow__(self, other) -> "ASyncFuture":
-        """
-        Raises another value or `ASyncFuture` to the power of the result of this `ASyncFuture`.
-
-        Args:
-            other: The base value or `ASyncFuture`.
-
-        Returns:
-            A new `ASyncFuture` representing the power.
-
-        Example:
-            >>> future1 = ASyncFuture(asyncio.sleep(1, result=3))
-            >>> result = 2 ** future1
-            >>> await result
-            8
-        """
-        return ASyncFuture(self.__rpow(other), dependencies=self.__list_dependencies(other))
-
-    def __eq__(self, other) -> "ASyncFuture":
-        """
-        Compares the result of this `ASyncFuture` with another value or `ASyncFuture` for equality.
-
-        Args:
-            other: The value or `ASyncFuture` to compare.
-
-        Returns:
-            A new `ASyncFuture` representing the equality comparison result.
-
-        Example:
-            >>> future1 = ASyncFuture(asyncio.sleep(1, result=10))
-            >>> future2 = ASyncFuture(asyncio.sleep(1, result=10))
-            >>> result = future1 == future2
-            >>> await result
-            True
-        """
-        return bool(ASyncFuture(self.__eq(other), dependencies=self.__list_dependencies(other)))
-
-    def __gt__(self, other) -> "ASyncFuture":
-        """
-        Compares the result of this `ASyncFuture` with another value or `ASyncFuture` for greater than.
-
-        Args:
-            other: The value or `ASyncFuture` to compare.
-
-        Returns:
-            A new `ASyncFuture` representing the greater than comparison result.
-
-        Example:
-            >>> future1 = ASyncFuture(asyncio.sleep(1, result=10))
-            >>> future2 = ASyncFuture(asyncio.sleep(1, result=5))
-            >>> result = future1 > future2
-            >>> await result
-            True
-        """
-        return ASyncFuture(self.__gt(other), dependencies=self.__list_dependencies(other))
-
-    def __ge__(self, other) -> "ASyncFuture":
-        """
-        Compares the result of this `ASyncFuture` with another value or `ASyncFuture` for greater than or equal.
-
-        Args:
-            other: The value or `ASyncFuture` to compare.
-
-        Returns:
-            A new `ASyncFuture` representing the greater than or equal comparison result.
-
-        Example:
-            >>> future1 = ASyncFuture(asyncio.sleep(1, result=10))
-            >>> future2 = ASyncFuture(asyncio.sleep(1, result=10))
-            >>> result = future1 >= future2
-            >>> await result
-            True
-        """
-        return ASyncFuture(self.__ge(other), dependencies=self.__list_dependencies(other))
-
-    def __lt__(self, other) -> "ASyncFuture":
-        """
-        Compares the result of this `ASyncFuture` with another value or `ASyncFuture` for less than.
-
-        Args:
-            other: The value or `ASyncFuture` to compare.
-
-        Returns:
-            A new `ASyncFuture` representing the less than comparison result.
-
-        Example:
-            >>> future1 = ASyncFuture(asyncio.sleep(1, result=5))
-            >>> future2 = ASyncFuture(asyncio.sleep(1, result=10))
-            >>> result = future1 < future2
-            >>> await result
-            True
-        """
-        return ASyncFuture(self.__lt(other), dependencies=self.__list_dependencies(other))
-
-    def __le__(self, other) -> "ASyncFuture":
-        """
-        Compares the result of this `ASyncFuture` with another value or `ASyncFuture` for less than or equal.
-
-        Args:
-            other: The value or `ASyncFuture` to compare.
-
-        Returns:
-            A new `ASyncFuture` representing the less than or equal comparison result.
-
-        Example:
-            >>> future1 = ASyncFuture(asyncio.sleep(1, result=5))
-            >>> future2 = ASyncFuture(asyncio.sleep(1, result=5))
-            >>> result = future1 <= future2
-            >>> await result
-            True
-        """
-        return ASyncFuture(self.__le(other), dependencies=self.__list_dependencies(other))
-
-    # Maths
-
-    @overload
-    async def __add(self: "ASyncFuture[int]", other: int) -> "ASyncFuture[int]": ...
-
-    @overload
-    async def __add(self: "ASyncFuture[float]", other: float) -> "ASyncFuture[float]": ...
-
-    @overload
-    async def __add(self: "ASyncFuture[float]", other: int) -> "ASyncFuture[float]": ...
-
-    @overload
-    async def __add(self: "ASyncFuture[int]", other: float) -> "ASyncFuture[float]": ...
-
-    @overload
-    async def __add(self: "ASyncFuture[Decimal]", other: Decimal) -> "ASyncFuture[Decimal]": ...
-
-    @overload
-    async def __add(self: "ASyncFuture[Decimal]", other: int) -> "ASyncFuture[Decimal]": ...
-
-    @overload
-    async def __add(self: "ASyncFuture[int]", other: Decimal) -> "ASyncFuture[Decimal]": ...
-
-    @overload
-    async def __add(self: "ASyncFuture[int]", other: Awaitable[int]) -> "ASyncFuture[int]": ...
+    async def __add(
+        self: "ASyncFuture[int]", other: Awaitable[int]
+    ) -> "ASyncFuture[int]": ...
 
     @overload
     async def __add(
@@ -989,10 +480,14 @@ class ASyncFuture(concurrent.futures.Future, Awaitable[T]):
     ) -> "ASyncFuture[float]": ...
 
     @overload
-    async def __add(self: "ASyncFuture[float]", other: Awaitable[int]) -> "ASyncFuture[float]": ...
+    async def __add(
+        self: "ASyncFuture[float]", other: Awaitable[int]
+    ) -> "ASyncFuture[float]": ...
 
     @overload
-    async def __add(self: "ASyncFuture[int]", other: Awaitable[float]) -> "ASyncFuture[float]": ...
+    async def __add(
+        self: "ASyncFuture[int]", other: Awaitable[float]
+    ) -> "ASyncFuture[float]": ...
 
     @overload
     async def __add(
@@ -1014,99 +509,44 @@ class ASyncFuture(concurrent.futures.Future, Awaitable[T]):
         return a + b
 
     @overload
-    async def __sub(self: "ASyncFuture[int]", other: int) -> "ASyncFuture[int]": ...
+    async def __radd(
+        self: "ASyncFuture[int]", other: int
+    ) -> "ASyncFuture[int]": ...
 
     @overload
-    async def __sub(self: "ASyncFuture[float]", other: float) -> "ASyncFuture[float]": ...
-
-    @overload
-    async def __sub(self: "ASyncFuture[float]", other: int) -> "ASyncFuture[float]": ...
-
-    @overload
-    async def __sub(self: "ASyncFuture[int]", other: float) -> "ASyncFuture[float]": ...
-
-    @overload
-    async def __sub(self: "ASyncFuture[Decimal]", other: Decimal) -> "ASyncFuture[Decimal]": ...
-
-    @overload
-    async def __sub(self: "ASyncFuture[Decimal]", other: int) -> "ASyncFuture[Decimal]": ...
-
-    @overload
-    async def __sub(self: "ASyncFuture[int]", other: Decimal) -> "ASyncFuture[Decimal]": ...
-
-    @overload
-    async def __sub(self: "ASyncFuture[int]", other: Awaitable[int]) -> "ASyncFuture[int]": ...
-
-    @overload
-    async def __sub(
-        self: "ASyncFuture[float]", other: Awaitable[float]
+    async def __radd(
+        self: "ASyncFuture[float]", other: float
     ) -> "ASyncFuture[float]": ...
 
     @overload
-    async def __sub(self: "ASyncFuture[float]", other: Awaitable[int]) -> "ASyncFuture[float]": ...
+    async def __radd(
+        self: "ASyncFuture[float]", other: int
+    ) -> "ASyncFuture[float]": ...
 
     @overload
-    async def __sub(self: "ASyncFuture[int]", other: Awaitable[float]) -> "ASyncFuture[float]": ...
+    async def __radd(
+        self: "ASyncFuture[int]", other: float
+    ) -> "ASyncFuture[float]": ...
 
     @overload
-    async def __sub(
-        self: "ASyncFuture[Decimal]", other: Awaitable[Decimal]
+    async def __radd(
+        self: "ASyncFuture[Decimal]", other: Decimal
     ) -> "ASyncFuture[Decimal]": ...
 
     @overload
-    async def __sub(
-        self: "ASyncFuture[Decimal]", other: Awaitable[int]
+    async def __radd(
+        self: "ASyncFuture[Decimal]", other: int
     ) -> "ASyncFuture[Decimal]": ...
 
     @overload
-    async def __sub(
-        self: "ASyncFuture[int]", other: Awaitable[Decimal]
+    async def __radd(
+        self: "ASyncFuture[int]", other: Decimal
     ) -> "ASyncFuture[Decimal]": ...
 
-    async def __sub(self, other) -> "Any":
-        a, b = await _gather_check_and_materialize(self, other)
-        return a - b
-
-    async def __mul(self, other) -> "Any":
-        a, b = await _gather_check_and_materialize(self, other)
-        return a * b
-
-    async def __truediv(self, other) -> "Any":
-        a, b = await _gather_check_and_materialize(self, other)
-        return a / b
-
-    async def __floordiv(self, other) -> "Any":
-        a, b = await _gather_check_and_materialize(self, other)
-        return a // b
-
-    async def __pow(self, other) -> "Any":
-        a, b = await _gather_check_and_materialize(self, other)
-        return a**b
-
-    # rMaths
     @overload
-    async def __radd(self: "ASyncFuture[int]", other: int) -> "ASyncFuture[int]": ...
-
-    @overload
-    async def __radd(self: "ASyncFuture[float]", other: float) -> "ASyncFuture[float]": ...
-
-    @overload
-    async def __radd(self: "ASyncFuture[float]", other: int) -> "ASyncFuture[float]": ...
-
-    @overload
-    async def __radd(self: "ASyncFuture[int]", other: float) -> "ASyncFuture[float]": ...
-
-    @overload
-    async def __radd(self: "ASyncFuture[Decimal]", other: Decimal) -> "ASyncFuture[Decimal]": ...
-
-    @overload
-    async def __radd(self: "ASyncFuture[Decimal]", other: int) -> "ASyncFuture[Decimal]": ...
-
-    @overload
-    async def __radd(self: "ASyncFuture[int]", other: Decimal) -> "ASyncFuture[Decimal]": ...
-
-    @overload
-    async def __radd(self: "ASyncFuture[int]", other: Awaitable[int]) -> "ASyncFuture[int]": ...
+    async def __radd(
+        self: "ASyncFuture[int]", other: Awaitable[int]
+    ) -> "ASyncFuture[int]": ...
 
     @overload
     async def __radd(
@@ -1114,10 +554,14 @@ class ASyncFuture(concurrent.futures.Future, Awaitable[T]):
     ) -> "ASyncFuture[float]": ...
 
     @overload
-    async def __radd(self: "ASyncFuture[float]", other: Awaitable[int]) -> "ASyncFuture[float]": ...
+    async def __radd(
+        self: "ASyncFuture[float]", other: Awaitable[int]
+    ) -> "ASyncFuture[float]": ...
 
     @overload
-    async def __radd(self: "ASyncFuture[int]", other: Awaitable[float]) -> "ASyncFuture[float]": ...
+    async def __radd(
+        self: "ASyncFuture[int]", other: Awaitable[float]
+    ) -> "ASyncFuture[float]": ...
 
     @overload
     async def __radd(
