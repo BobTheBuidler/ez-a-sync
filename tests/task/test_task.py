@@ -6,18 +6,18 @@ import pytest
 
 from a_sync import TaskMapping, a_sync, create_task
 from a_sync.a_sync.base import ASyncGenericBase
+from a_sync.a_sync.function import _ASyncFunction  # type: ignore[attr-defined]
 from a_sync.a_sync.function import (
     ASyncFunction,
     ASyncFunctionAsyncDefault,
     ASyncFunctionSyncDefault,
 )
-from a_sync.a_sync.function import _ASyncFunction  # type: ignore[attr-defined]
+from a_sync.a_sync.method import _ASyncBoundMethod  # type: ignore[attr-defined]
 from a_sync.a_sync.method import (
     ASyncBoundMethod,
     ASyncBoundMethodAsyncDefault,
     ASyncBoundMethodSyncDefault,
 )
-from a_sync.a_sync.method import _ASyncBoundMethod  # type: ignore[attr-defined]
 from a_sync.task import _EmptySequenceError, _unwrap
 
 

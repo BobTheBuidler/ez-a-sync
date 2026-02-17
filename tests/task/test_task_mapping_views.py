@@ -3,8 +3,13 @@ from typing import Any
 
 import pytest
 
-from a_sync.task import (TaskMapping, TaskMappingItems, TaskMappingKeys, TaskMappingValues,
-                         _EmptySequenceError)
+from a_sync.task import (
+    TaskMapping,
+    TaskMappingItems,
+    TaskMappingKeys,
+    TaskMappingValues,
+    _EmptySequenceError,
+)
 
 views = [TaskMappingKeys, TaskMappingValues, TaskMappingItems]
 
@@ -38,9 +43,7 @@ def test_taskmapping_views_sync(view_class: type[Any], expected: list[Any]) -> N
         (TaskMappingItems, [("key1", "result for key1"), ("key2", "result for key2")]),
     ],
 )
-async def test_taskmapping_views_async(
-    view_class: type[Any], expected: list[Any]
-) -> None:
+async def test_taskmapping_views_async(view_class: type[Any], expected: list[Any]) -> None:
     tasks = TaskMapping(sample_task, ["key1", "key2"])
     view = view_class(expected, tasks)
     results = [item async for item in view]
