@@ -1,4 +1,4 @@
-# type: ignore [var-annotated]
+# mypy: disable-error-code="var-annotated"
 
 """
 The `future.py` module provides functionality for handling asynchronous futures,

@@ -23,7 +23,7 @@ class AsyncCachedPropertyDescriptor(Generic[__I, __T]):
     field_name: FieldName
     _load_value: Callable[[__I], Awaitable[__T]]
     _fget: Callable[[__I], __T]
-    _fset: Callable[[__I, __T]] | None
+    _fset: Callable[[__I, __T], None] | None
     _fdel: Callable[[__I], Any] | None
     def __init__(
         self, _fget: Callable[[__I], __T], _fset=None, _fdel=None, field_name=None
