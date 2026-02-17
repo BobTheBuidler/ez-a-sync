@@ -369,7 +369,10 @@ class ASyncFuture(concurrent.futures.Future, Awaitable[T]):
         """
         del _materialize(self)[key]
 
-    async def __await__(self) -> Generator[Any, None, T]:
+    def __await__(self) -> Generator[Any, None, T]:
+        return self._await().__await__()
+
+    async def _await(self) -> T:
         try:
             result = await self.__awaitable__
         except Exception as exc:
