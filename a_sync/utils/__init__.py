@@ -129,4 +129,4 @@ class CancelMessage:
         return f"CancelMessage('{str(self)}')"
 
     def __str__(self) -> str:
-        return f"{message}: {result!r}"
+        return f"{self.message}: {self.result!r}"
