@@ -1,3 +1,5 @@
+import inspect
+
 from a_sync.future import ASyncFuture
 
 
@@ -26,6 +28,10 @@ async def zero():
 
 def test_result():
     assert ASyncFuture(one()).result() == 1
+
+
+def test_await_protocol_uses_iterator():
+    assert not inspect.iscoroutinefunction(ASyncFuture.__await__)
 
 
 def test_add():
