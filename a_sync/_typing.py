@@ -73,8 +73,8 @@ from typing import (
     Any,
     Literal,
     Protocol,
-    TypedDict,
     TypeAlias,
+    TypedDict,
     TypeVar,
     runtime_checkable,
 )
