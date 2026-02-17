@@ -3,6 +3,7 @@ from __future__ import annotations
 import os
 from typing import Iterable, Optional
 
+from mypy.checkmember import analyze_member_access
 from mypy.nodes import (
     AssignmentStmt,
     CallExpr,
@@ -473,10 +474,21 @@ def _future_or_proxy_attribute_hook(
         return ctx.default_attr_type
     if proper.type.fullname != expected_fullname and not proper.type.has_base(expected_fullname):
         return ctx.default_attr_type
+    if proper.type.has_readable_member(attr_name):
+        return ctx.default_attr_type
     if not proper.args:
         return ctx.default_attr_type
     inner = proper.args[0]
-    return ctx.default_attr_type
+    return analyze_member_access(
+        attr_name,
+        inner,
+        ctx.context,
+        is_lvalue=ctx.is_lvalue,
+        is_super=False,
+        is_operator=False,
+        original_type=inner,
+        chk=ctx.api,
+    )
 
 
 def _a_sync_function_hook(ctx: FunctionContext) -> Type:
