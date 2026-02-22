@@ -861,12 +861,34 @@ cdef void _init_subclass(cls, dict kwargs):
 
     cdef object base
     cdef tuple args
+    cdef tuple cls_args
     cdef str module, qualname, name
+    cls_args = get_args(cls)
+    if not cls_args:
+        cls_args = getattr(cls, "__args__", ())
+    if cls_args and not isinstance(type_argument := cls_args[0], TypeVar):
+        module = getattr(type_argument, "__module__", "")
+        qualname = getattr(type_argument, "__qualname__", "")
+        name = getattr(type_argument, "__name__", "")
+
+        if module and qualname:
+            type_string = ":class:`~{}.{}`".format(module, qualname)
+        elif module and name:
+            type_string = ":class:`~{}.{}`".format(module, name)
+        elif qualname:
+            type_string = ":class:`{}`".format(qualname)
+        elif name:
+            type_string = ":class:`{}`".format(name)
+        else:
+            type_string = str(type_argument)
+
     for base in getattr(cls, "__orig_bases__", []):
         if not hasattr(base, "__args__"):
             continue
         
         args = get_args(base)
+        if not args:
+            args = getattr(base, "__args__", ())
         if base in (ASyncIterable, ASyncIterator, ASyncFilter, ASyncSorter):
             raise Exception(base, args)
             
