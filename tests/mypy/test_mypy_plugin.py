@@ -93,3 +93,20 @@ def test_property_descriptor_typing(tmp_path: Path) -> None:
     )
     expected = Counter(['"typing.Awaitable[builtins.int]"'])
     assert _reveal_types(output) == expected
+
+
+def test_a_sync_decorator_in_conditional_scope_does_not_internal_error(tmp_path: Path) -> None:
+    output = _run_mypy(
+        tmp_path,
+        """
+        from a_sync import a_sync
+
+        if a_sync:  # type: ignore[truthy-function]
+            @a_sync("async")
+            async def fn(value: int) -> int:
+                return value
+
+            reveal_type(fn)
+        """,
+    )
+    assert "Revealed type is" in output

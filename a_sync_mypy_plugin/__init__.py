@@ -491,6 +491,14 @@ def _future_or_proxy_attribute_hook(
     )
 
 
+def _safe_named_generic_type(ctx: FunctionContext, fullname: str, args: list[Type]) -> Type:
+    try:
+        return ctx.api.named_generic_type(fullname, args)
+    except AssertionError:
+        # Avoid mypy INTERNAL ERROR when symbols are unresolved in conditional scopes.
+        return ctx.default_return_type
+
+
 def _a_sync_function_hook(ctx: FunctionContext) -> Type:
     default = None
     coro_arg_type: Optional[CallableType] = None
@@ -517,11 +525,13 @@ def _a_sync_function_hook(ctx: FunctionContext) -> Type:
 
     if coro_arg_type is None:
         if default == "sync":
-            return ctx.api.named_generic_type(
+            return _safe_named_generic_type(
+                ctx,
                 "a_sync.a_sync.function.ASyncDecoratorSyncDefault", []
             )
         if default == "async":
-            return ctx.api.named_generic_type(
+            return _safe_named_generic_type(
+                ctx,
                 "a_sync.a_sync.function.ASyncDecoratorAsyncDefault", []
             )
         return ctx.default_return_type
@@ -533,10 +543,12 @@ def _a_sync_function_hook(ctx: FunctionContext) -> Type:
         default = "async" if _is_async_return_type(coro_arg_type) else "sync"
 
     if default == "sync":
-        return ctx.api.named_generic_type(
+        return _safe_named_generic_type(
+            ctx,
             "a_sync.a_sync.function.ASyncFunctionSyncDefault", [params, value_type]
         )
-    return ctx.api.named_generic_type(
+    return _safe_named_generic_type(
+        ctx,
         "a_sync.a_sync.function.ASyncFunctionAsyncDefault", [params, value_type]
     )
 
