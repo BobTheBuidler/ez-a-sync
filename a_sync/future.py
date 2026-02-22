@@ -26,6 +26,7 @@ TODO include comparisons between the 'new way' with this future class and the 'o
 """
 
 import concurrent.futures
+import operator
 import sys
 from asyncio import Future, Task, get_event_loop
 from collections.abc import Awaitable, Callable, Generator
@@ -373,65 +374,118 @@ class ASyncFuture(concurrent.futures.Future, Awaitable[T]):
         return self._await().__await__()
 
     async def _await(self) -> T:
+        if self.done():
+            return _cf_result(self)
+
+        if self.__task is None:
+            self.__task = create_task(self.__awaitable__)
+
         try:
-            result = await self.__awaitable__
+            result = await self.__task
         except Exception as exc:
-            self.set_exception(exc)
+            if not self.done():
+                self.set_exception(exc)
             raise
-        else:
+        if not self.done():
             self.set_result(result)
-            return result
+        return result
 
     async def __call__(self, *args, **kwargs) -> Any:
         return await self.__awaitable__(*args, **kwargs)
 
+    def __binary_op(
+        self,
+        other: Any,
+        op: Callable[[Any, Any], Any],
+        *,
+        reverse: bool = False,
+    ) -> "ASyncFuture[Any]":
+        dependencies = self.__list_dependencies(other)
+
+        async def _compute() -> Any:
+            if reverse:
+                left, right = await _gather_check_and_materialize(other, self)
+            else:
+                left, right = await _gather_check_and_materialize(self, other)
+            return op(left, right)
+
+        return ASyncFuture(_compute(), dependencies=dependencies)
+
+    def __materialize_other(self, other: Any) -> Any:
+        if isinstance(other, ASyncFuture):
+            return _materialize(other)
+        if isawaitable(other):
+            return _materialize(ASyncFuture(other))
+        return other
+
     def __iadd__(self, other) -> "ASyncFuture":
-        other = ASyncFuture(other, dependencies=self.__list_dependencies(other))
-        return ASyncFuture(self.__add(other), dependencies=self.__list_dependencies(other))
+        return self.__binary_op(other, operator.add)
 
     def __add__(self, other) -> "ASyncFuture":
-        other = ASyncFuture(other, dependencies=self.__list_dependencies(other))
-        return ASyncFuture(self.__add(other), dependencies=self.__list_dependencies(other))
+        return self.__binary_op(other, operator.add)
+
+    def __radd__(self, other) -> "ASyncFuture":
+        return self.__binary_op(other, operator.add, reverse=True)
 
     def __isub__(self, other) -> "ASyncFuture":
-        other = ASyncFuture(other, dependencies=self.__list_dependencies(other))
-        return ASyncFuture(self.__sub(other), dependencies=self.__list_dependencies(other))
+        return self.__binary_op(other, operator.sub)
 
     def __sub__(self, other) -> "ASyncFuture":
-        other = ASyncFuture(other, dependencies=self.__list_dependencies(other))
-        return ASyncFuture(self.__sub(other), dependencies=self.__list_dependencies(other))
+        return self.__binary_op(other, operator.sub)
+
+    def __rsub__(self, other) -> "ASyncFuture":
+        return self.__binary_op(other, operator.sub, reverse=True)
 
     def __imul__(self, other) -> "ASyncFuture":
-        other = ASyncFuture(other, dependencies=self.__list_dependencies(other))
-        return ASyncFuture(self.__mul(other), dependencies=self.__list_dependencies(other))
+        return self.__binary_op(other, operator.mul)
 
     def __mul__(self, other) -> "ASyncFuture":
-        other = ASyncFuture(other, dependencies=self.__list_dependencies(other))
-        return ASyncFuture(self.__mul(other), dependencies=self.__list_dependencies(other))
+        return self.__binary_op(other, operator.mul)
+
+    def __rmul__(self, other) -> "ASyncFuture":
+        return self.__binary_op(other, operator.mul, reverse=True)
 
     def __itruediv__(self, other) -> "ASyncFuture":
-        other = ASyncFuture(other, dependencies=self.__list_dependencies(other))
-        return ASyncFuture(self.__truediv(other), dependencies=self.__list_dependencies(other))
+        return self.__binary_op(other, operator.truediv)
 
     def __truediv__(self, other) -> "ASyncFuture":
-        other = ASyncFuture(other, dependencies=self.__list_dependencies(other))
-        return ASyncFuture(self.__truediv(other), dependencies=self.__list_dependencies(other))
+        return self.__binary_op(other, operator.truediv)
+
+    def __rtruediv__(self, other) -> "ASyncFuture":
+        return self.__binary_op(other, operator.truediv, reverse=True)
 
     def __ifloordiv__(self, other) -> "ASyncFuture":
-        other = ASyncFuture(other, dependencies=self.__list_dependencies(other))
-        return ASyncFuture(self.__floordiv(other), dependencies=self.__list_dependencies(other))
+        return self.__binary_op(other, operator.floordiv)
 
     def __floordiv__(self, other) -> "ASyncFuture":
-        other = ASyncFuture(other, dependencies=self.__list_dependencies(other))
-        return ASyncFuture(self.__floordiv(other), dependencies=self.__list_dependencies(other))
+        return self.__binary_op(other, operator.floordiv)
+
+    def __rfloordiv__(self, other) -> "ASyncFuture":
+        return self.__binary_op(other, operator.floordiv, reverse=True)
 
     def __ipow__(self, other) -> "ASyncFuture":
-        other = ASyncFuture(other, dependencies=self.__list_dependencies(other))
-        return ASyncFuture(self.__pow(other), dependencies=self.__list_dependencies(other))
+        return self.__binary_op(other, operator.pow)
 
     def __pow__(self, other) -> "ASyncFuture":
-        other = ASyncFuture(other, dependencies=self.__list_dependencies(other))
-        return ASyncFuture(self.__pow(other), dependencies=self.__list_dependencies(other))
+        return self.__binary_op(other, operator.pow)
+
+    def __rpow__(self, other) -> "ASyncFuture":
+        return self.__binary_op(other, operator.pow, reverse=True)
+
+    def __eq__(self, other) -> bool:
+        return _materialize(self) == self.__materialize_other(other)
+
+    def __gt__(self, other) -> bool:
+        return _materialize(self) > self.__materialize_other(other)
+
+    def __ge__(self, other) -> bool:
+        return _materialize(self) >= self.__materialize_other(other)
+
+    def __lt__(self, other) -> bool:
+        return _materialize(self) < self.__materialize_other(other)
+
+    def __le__(self, other) -> bool:
+        return _materialize(self) <= self.__materialize_other(other)
 
     async def __add(self, other) -> "Any":
         a, b = await _gather_check_and_materialize(self, other)
