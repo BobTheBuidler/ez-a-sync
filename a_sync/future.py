@@ -5,6 +5,12 @@ The `future.py` module provides functionality for handling asynchronous futures,
 including a decorator for converting callables into `ASyncFuture` objects and
 utilities for managing asynchronous computations.
 
+Performance Note:
+    Arithmetic and comparison dunder wrappers in `ASyncFuture` intentionally call
+    internal async methods directly instead of routing through a shared helper.
+    This is an intentionally ugly micro-optimization to avoid extra Python-level
+    call overhead in hot paths.
+
 Functions:
     future(callable: Callable[P, Awaitable[T]] | Callable[P, T] | None = None, **kwargs: Unpack[ModifierKwargs]) -> Callable[P, Union[T, "ASyncFuture[T]"]]:
         A decorator to convert a callable into an `ASyncFuture`, with optional modifiers.
