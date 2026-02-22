@@ -62,8 +62,6 @@ def create_task(
         skip_gc_until_done: If True, the task is kept alive until it completes, preventing garbage collection.
             Exceptions are wrapped in :class:`PersistedTaskException` for special handling within the
             `__persisted_task_exc_wrap` function.
-            Cleanup is callback-driven and therefore loop-scheduled, so completed persisted wrappers
-            may remain in `_persisted_tasks` until the event loop gets another turn.
         log_destroy_pending: If False, asyncio's default error log when a pending task is destroyed is suppressed.
 
     Examples:
@@ -125,8 +123,6 @@ cdef object ccreate_task(object coro, str name, bint skip_gc_until_done, bint lo
             if name:
                 __set_task_name(persisted, name)
 
-        # Cleanup is intentional callback-only behavior: done callbacks run on the loop,
-        # so `_persisted_tasks` can contain done wrappers until the next loop turn.
         persisted.add_done_callback(_persisted_task_callback)
         _persisted_tasks.add(persisted)
 
@@ -152,10 +148,6 @@ def _persisted_task_callback(task: Task[Any]) -> None:
     This callback function checks each persisted task as it completes. If a task has a :class:`PersistedTaskException`,
     it logs the exception before discarding the task. If it has any other type of Exception, it adds it to `_exceptions`
     to be raised later.
-
-    Note:
-        Callback execution is loop-scheduled, so there can be a short window where a completed
-        persisted wrapper is still present in `_persisted_tasks`.
 
     See Also:
         - :class:`PersistedTaskException`
