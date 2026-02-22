@@ -1,7 +1,8 @@
 from __future__ import annotations
 
 import os
-from typing import Iterable, Optional
+from collections.abc import Iterable
+from typing import Optional
 
 from mypy.checkmember import analyze_member_access
 from mypy.nodes import (
@@ -17,8 +18,8 @@ from mypy.nodes import (
 )
 from mypy.plugin import AttributeContext, ClassDefContext, FunctionContext, MethodContext, Plugin
 from mypy.plugins.common import add_attribute_to_class
-from mypy.typevars import fill_typevars
 from mypy.types import CallableType, Instance, Overloaded, Parameters, Type, get_proper_type
+from mypy.typevars import fill_typevars
 
 PLUGIN_METADATA_KEY = "a_sync.mypy"
 
@@ -116,7 +117,7 @@ CLASSMETHOD_FULLNAMES = {"builtins.classmethod"}
 BUILTIN_PROPERTY_FULLNAMES = {"builtins.property", "functools.cached_property"}
 
 
-def _get_fullname(expr: Expression) -> Optional[str]:
+def _get_fullname(expr: Expression) -> str | None:
     if isinstance(expr, CallExpr):
         return _get_fullname(expr.callee)
     if isinstance(expr, (NameExpr, MemberExpr)):
@@ -146,7 +147,7 @@ def _has_builtin_property(decorators: Iterable[Expression]) -> bool:
     return False
 
 
-def _parse_default_arg(expr: CallExpr) -> Optional[str]:
+def _parse_default_arg(expr: CallExpr) -> str | None:
     for arg, name in zip(expr.args, expr.arg_names):
         if name == "default" and isinstance(arg, StrExpr):
             if arg.value in {"sync", "async"}:
@@ -161,7 +162,7 @@ def _parse_default_arg(expr: CallExpr) -> Optional[str]:
 
 def _property_info_from_decorators(
     decorators: Iterable[Expression],
-) -> Optional[tuple[str, Optional[str]]]:
+) -> tuple[str, str | None] | None:
     for decorator in decorators:
         default = None
         fullname = _get_fullname(decorator)
@@ -194,7 +195,7 @@ def _unwrap_awaitable(ret_type: Type) -> Type:
     return ret_type
 
 
-def _async_gen_yield_type(ret_type: Type) -> Optional[Type]:
+def _async_gen_yield_type(ret_type: Type) -> Type | None:
     proper = get_proper_type(ret_type)
     if isinstance(proper, Instance):
         fullname = proper.type.fullname
@@ -223,7 +224,7 @@ def _parameters_from_callable(callable_type: CallableType, *, drop_first: bool) 
     )
 
 
-def _callable_from_node(node: FuncDef | Decorator | OverloadedFuncDef) -> Optional[CallableType]:
+def _callable_from_node(node: FuncDef | Decorator | OverloadedFuncDef) -> CallableType | None:
     if isinstance(node, Decorator):
         return _callable_from_node(node.func)
     if isinstance(node, OverloadedFuncDef):
@@ -243,14 +244,14 @@ def _callable_from_node(node: FuncDef | Decorator | OverloadedFuncDef) -> Option
     return None
 
 
-def _named_type_or_none(api, fullname: str, args: list[Type]) -> Optional[Instance]:
+def _named_type_or_none(api, fullname: str, args: list[Type]) -> Instance | None:
     named_type_or_none = getattr(api, "named_type_or_none", None)
     if callable(named_type_or_none):
         return named_type_or_none(fullname, args)
     return api.named_type(fullname, args)
 
 
-def _class_instance_type(ctx: ClassDefContext) -> Optional[Instance]:
+def _class_instance_type(ctx: ClassDefContext) -> Instance | None:
     inst = fill_typevars(ctx.cls.info)
     if isinstance(inst, Instance):
         return inst
@@ -265,7 +266,7 @@ def _set_attr_type(ctx: ClassDefContext, name: str, typ: Instance) -> None:
 def _add_hidden_method(
     ctx: ClassDefContext,
     attr_name: str,
-    instance_type: Optional[Instance],
+    instance_type: Instance | None,
     value_type: Type,
     metadata: dict,
 ) -> None:
@@ -292,7 +293,7 @@ def _descriptor_type_for_method(
     callable_type: CallableType,
     *,
     drop_first: bool,
-) -> Optional[Instance]:
+) -> Instance | None:
     instance_type = _class_instance_type(ctx)
     if instance_type is None:
         return None
@@ -308,7 +309,7 @@ def _descriptor_type_for_async_gen(
     callable_type: CallableType,
     *,
     drop_first: bool,
-) -> Optional[Instance]:
+) -> Instance | None:
     params = _parameters_from_callable(callable_type, drop_first=drop_first)
     yield_type = _async_gen_yield_type(callable_type.ret_type)
     if yield_type is None:
@@ -320,9 +321,9 @@ def _descriptor_type_for_property(
     ctx: ClassDefContext,
     *,
     kind: str,
-    default: Optional[str],
+    default: str | None,
     value_type: Type,
-) -> Optional[Instance]:
+) -> Instance | None:
     instance_type = _class_instance_type(ctx)
     if instance_type is None:
         return None
@@ -339,7 +340,7 @@ def _is_async_return_type(callable_type: CallableType) -> bool:
     return False
 
 
-def _value_type_from_property_instance(prop_type: Type) -> Optional[Type]:
+def _value_type_from_property_instance(prop_type: Type) -> Type | None:
     proper = get_proper_type(prop_type)
     if isinstance(proper, Instance) and proper.type.fullname in PROPERTY_DESCRIPTOR_FULLNAMES:
         if len(proper.args) >= 2:
@@ -347,7 +348,7 @@ def _value_type_from_property_instance(prop_type: Type) -> Optional[Type]:
     return None
 
 
-def _env_default_mode() -> Optional[str]:
+def _env_default_mode() -> str | None:
     value = os.environ.get("A_SYNC_DEFAULT_MODE")
     if value in {"sync", "async"}:
         return value
@@ -501,7 +502,7 @@ def _safe_named_generic_type(ctx: FunctionContext, fullname: str, args: list[Typ
 
 def _a_sync_function_hook(ctx: FunctionContext) -> Type:
     default = None
-    coro_arg_type: Optional[CallableType] = None
+    coro_arg_type: CallableType | None = None
 
     for idx, name in enumerate(ctx.callee_arg_names):
         if name == "default" and ctx.args[idx]:
@@ -526,13 +527,11 @@ def _a_sync_function_hook(ctx: FunctionContext) -> Type:
     if coro_arg_type is None:
         if default == "sync":
             return _safe_named_generic_type(
-                ctx,
-                "a_sync.a_sync.function.ASyncDecoratorSyncDefault", []
+                ctx, "a_sync.a_sync.function.ASyncDecoratorSyncDefault", []
             )
         if default == "async":
             return _safe_named_generic_type(
-                ctx,
-                "a_sync.a_sync.function.ASyncDecoratorAsyncDefault", []
+                ctx, "a_sync.a_sync.function.ASyncDecoratorAsyncDefault", []
             )
         return ctx.default_return_type
 
@@ -544,21 +543,17 @@ def _a_sync_function_hook(ctx: FunctionContext) -> Type:
 
     if default == "sync":
         return _safe_named_generic_type(
-            ctx,
-            "a_sync.a_sync.function.ASyncFunctionSyncDefault", [params, value_type]
+            ctx, "a_sync.a_sync.function.ASyncFunctionSyncDefault", [params, value_type]
         )
     return _safe_named_generic_type(
-        ctx,
-        "a_sync.a_sync.function.ASyncFunctionAsyncDefault", [params, value_type]
+        ctx, "a_sync.a_sync.function.ASyncFunctionAsyncDefault", [params, value_type]
     )
 
 
 def _flag_conflict_hook(ctx: MethodContext) -> Type:
     names = _extract_named_arg_names(ctx)
     if "sync" in names and "asynchronous" in names:
-        ctx.api.fail(
-            "Too many flags: pass at most one of 'sync' or 'asynchronous'.", ctx.context
-        )
+        ctx.api.fail("Too many flags: pass at most one of 'sync' or 'asynchronous'.", ctx.context)
     return ctx.default_return_type
 
 

@@ -49,9 +49,7 @@ def async_error_generator() -> Iterator[Callable[..., AsyncIterator[int]]]:
 
 
 @test_both
-def test_wrap_types(
-    cls_to_test: Any, async_generator: Callable[..., AsyncIterator[int]]
-) -> None:
+def test_wrap_types(cls_to_test: Any, async_generator: Callable[..., AsyncIterator[int]]) -> None:
     assert isinstance(cls_to_test(async_generator()), cls_to_test)
     assert isinstance(cls_to_test.wrap(async_generator()), cls_to_test)
 
@@ -79,9 +77,7 @@ def test_sync(cls_to_test: Any, async_generator: Callable[..., AsyncIterator[int
 
 @test_both
 @asyncio_cooperative
-async def test_async(
-    cls_to_test: Any, async_generator: Callable[..., AsyncIterator[int]]
-) -> None:
+async def test_async(cls_to_test: Any, async_generator: Callable[..., AsyncIterator[int]]) -> None:
     ait = cls_to_test(async_generator())
 
     # comprehension
@@ -134,9 +130,7 @@ async def test_async_empty(
 
 
 @test_both
-def test_sync_partial(
-    cls_to_test: Any, async_generator: Callable[..., AsyncIterator[int]]
-) -> None:
+def test_sync_partial(cls_to_test: Any, async_generator: Callable[..., AsyncIterator[int]]) -> None:
     iterator = cls_to_test(async_generator(5))
     results = []
     for item in iterator:
@@ -212,7 +206,7 @@ def test_aiterable_decorated_func_sync() -> None:
 
 @asyncio_cooperative
 async def test_aiterable_decorated_func_async(
-    async_generator: Callable[..., AsyncIterator[int]]
+    async_generator: Callable[..., AsyncIterator[int]],
 ) -> None:
     with pytest.raises(TypeError, match="`async_iterable` must be an AsyncIterable. You passed "):
 
@@ -221,9 +215,7 @@ async def test_aiterable_decorated_func_async(
             yield 0
 
 
-def test_aiterator_decorated_func_sync(
-    async_generator: Callable[..., AsyncIterator[int]]
-) -> None:
+def test_aiterator_decorated_func_sync(async_generator: Callable[..., AsyncIterator[int]]) -> None:
     @ASyncIterator.wrap  # type: ignore[attr-defined,untyped-decorator]
     async def decorated() -> AsyncIterator[int]:
         async for i in async_generator():
@@ -236,7 +228,7 @@ def test_aiterator_decorated_func_sync(
 
 @asyncio_cooperative
 async def test_aiterator_decorated_func_async(
-    async_generator: Callable[..., AsyncIterator[int]]
+    async_generator: Callable[..., AsyncIterator[int]],
 ) -> None:
     @ASyncIterator.wrap  # type: ignore[attr-defined,untyped-decorator]
     async def decorated() -> AsyncIterator[int]:
@@ -268,7 +260,7 @@ async def test_aiterable_decorated_method_async() -> None:
 
 
 def test_aiterator_decorated_method_sync(
-    async_generator: Callable[..., AsyncIterator[int]]
+    async_generator: Callable[..., AsyncIterator[int]],
 ) -> None:
     class Test:
         @ASyncIterator.wrap  # type: ignore[attr-defined,untyped-decorator]
@@ -283,7 +275,7 @@ def test_aiterator_decorated_method_sync(
 
 @asyncio_cooperative
 async def test_aiterator_decorated_method_async(
-    async_generator: Callable[..., AsyncIterator[int]]
+    async_generator: Callable[..., AsyncIterator[int]],
 ) -> None:
     class Test:
         @ASyncIterator.wrap  # type: ignore[attr-defined,untyped-decorator]
@@ -341,26 +333,20 @@ async def test_async_with_iterable(cls_to_test: Any) -> None:
 # Type check dunder methods
 
 
-def test_async_iterable_iter_method(
-    async_generator: Callable[..., AsyncIterator[int]]
-) -> None:
+def test_async_iterable_iter_method(async_generator: Callable[..., AsyncIterator[int]]) -> None:
     ait = ASyncIterable(async_generator())
     iterator = iter(ait)
     assert isinstance(iterator, Iterator)
 
 
-def test_async_iterator_iter_method(
-    async_generator: Callable[..., AsyncIterator[int]]
-) -> None:
+def test_async_iterator_iter_method(async_generator: Callable[..., AsyncIterator[int]]) -> None:
     ait = ASyncIterator(async_generator())
     iterator = iter(ait)
     assert iterator is ait  # Should return self
 
 
 @asyncio_cooperative
-async def test_async_aiter_method(
-    async_generator: Callable[..., AsyncIterator[int]]
-) -> None:
+async def test_async_aiter_method(async_generator: Callable[..., AsyncIterator[int]]) -> None:
     ait = ASyncIterable(async_generator())
     async_iterator = ait.__aiter__()
     assert isinstance(async_iterator, AsyncIterator)
@@ -368,7 +354,7 @@ async def test_async_aiter_method(
 
 @asyncio_cooperative
 async def test_async_iterator_aiter_method(
-    async_generator: Callable[..., AsyncIterator[int]]
+    async_generator: Callable[..., AsyncIterator[int]],
 ) -> None:
     ait = ASyncIterator(async_generator())
     async_iterator = ait.__aiter__()

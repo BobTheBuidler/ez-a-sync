@@ -4,13 +4,27 @@ from typing import Literal, Union, overload
 
 from typing_extensions import Unpack
 
-from a_sync._typing import (AnyFn, CoroFn, DefaultMode, ModifierKwargs,
-                            _ModifierKwargsNoDefault, _ModifierKwargsNoDefaultExecutor,
-                            _ModifierKwargsNoExecutor, P, SyncFn, T)
+from a_sync._typing import (
+    AnyFn,
+    CoroFn,
+    DefaultMode,
+    ModifierKwargs,
+    P,
+    SyncFn,
+    T,
+    _ModifierKwargsNoDefault,
+    _ModifierKwargsNoDefaultExecutor,
+    _ModifierKwargsNoExecutor,
+)
 from a_sync.a_sync import config
-from a_sync.a_sync.function import (ASyncDecorator, ASyncDecoratorAsyncDefault,
-                                    ASyncDecoratorSyncDefault, ASyncFunction,
-                                    ASyncFunctionAsyncDefault, ASyncFunctionSyncDefault)
+from a_sync.a_sync.function import (
+    ASyncDecorator,
+    ASyncDecoratorAsyncDefault,
+    ASyncDecoratorSyncDefault,
+    ASyncFunction,
+    ASyncFunctionAsyncDefault,
+    ASyncFunctionSyncDefault,
+)
 
 ########################
 # The a_sync decorator #

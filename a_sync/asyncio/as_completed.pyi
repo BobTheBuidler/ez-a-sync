@@ -74,6 +74,7 @@ def as_completed(
         - :func:`asyncio.as_completed`
         - :class:`ASyncIterator`
     """
+
 @overload
 def as_completed(
     fs: Iterable[Awaitable[T]],
@@ -134,6 +135,7 @@ def as_completed(
         - :func:`asyncio.as_completed`
         - :class:`ASyncIterator`
     """
+
 @overload
 def as_completed(
     fs: Mapping[K, Awaitable[V]],
@@ -194,6 +196,7 @@ def as_completed(
         - :func:`asyncio.as_completed`
         - :class:`ASyncIterator`
     """
+
 @overload
 def as_completed(
     fs: Mapping[K, Awaitable[V]],

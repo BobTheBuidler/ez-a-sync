@@ -2,9 +2,8 @@ import asyncio
 from collections.abc import AsyncIterator, Callable, Iterable
 from typing import Any, Generic, TypeVar, cast
 
-from typing_extensions import override
-
 import pytest
+from typing_extensions import override
 
 from a_sync.utils.iterators import _Done, as_yielded
 
