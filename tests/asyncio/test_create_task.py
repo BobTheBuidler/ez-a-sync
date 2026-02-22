@@ -48,8 +48,8 @@ async def test_create_task_skip_gc_until_done():
     assert len(persisted_tasks) == 1
     result = await task
     assert next(iter(persisted_tasks)).done()
-    # create some junk task to trigger the pruning of the persisted task set
-    create_task(sleep(0))
+    # Cleanup is callback-driven and occurs after the loop gets a chance to run callbacks.
+    await sleep(0)
     assert len(persisted_tasks) == 0
     assert result == "GC Test"
 
