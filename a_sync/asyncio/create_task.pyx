@@ -90,11 +90,6 @@ cdef object ccreate_task(object coro, str name, bint skip_gc_until_done, bint lo
     cdef object loop = get_running_loop()
     cdef object task_factory = loop._task_factory
     cdef object task, persisted
-
-    # Prune completed persisted wrappers on any new task creation.
-    for persisted in tuple(_persisted_tasks):
-        if persisted.done():
-            _persisted_tasks.discard(persisted)
     
     if not iscoroutine(coro):
         coro = __await(coro)
