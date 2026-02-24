@@ -87,6 +87,8 @@ async def test_singleton_meta_async(cls: type, i: int):
 
 
 class TestUnspecified(ASyncGenericSingleton):
+    __test__ = False
+
     def __init__(self, sync=True):
         self.sync = sync
 

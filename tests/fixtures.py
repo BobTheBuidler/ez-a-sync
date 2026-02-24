@@ -17,6 +17,8 @@ class WrongThreadError(Exception): ...
 
 
 class TestClass(ASyncBase):
+    __test__ = False
+
     def __init__(self, v: int, sync: bool = False):
         self.v = v
         self.sync = sync
@@ -51,6 +53,8 @@ class TestClass(ASyncBase):
 
 
 class TestSync(ASyncBase):
+    __test__ = False
+
     main = main_thread()
 
     def __init__(self, v: int, sync: bool):
@@ -110,6 +114,8 @@ class TestSingletonMeta(TestClass, metaclass=ASyncSingletonMeta):
 
 
 class TestSemaphore(ASyncBase):
+    __test__ = False
+
     # semaphore=1  # NOTE: this is detected propely by undecorated test_fn but not the properties
 
     def __init__(self, v: int, sync: bool):
