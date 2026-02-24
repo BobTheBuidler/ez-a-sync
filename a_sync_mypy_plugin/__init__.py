@@ -14,6 +14,7 @@ from mypy.nodes import (
     NameExpr,
     OverloadedFuncDef,
     StrExpr,
+    Var,
 )
 from mypy.plugin import AttributeContext, ClassDefContext, FunctionContext, MethodContext, Plugin
 from mypy.plugins.common import add_attribute_to_class
@@ -240,6 +241,28 @@ def _callable_from_node(node: FuncDef | Decorator | OverloadedFuncDef) -> Option
         return node.type
     if isinstance(node.type, Overloaded) and len(node.type.items) == 1:
         return node.type.items[0]
+    return None
+
+
+def _callable_from_expression(expr: Expression) -> Optional[CallableType]:
+    if isinstance(expr, NameExpr):
+        node = expr.node
+        if isinstance(node, (FuncDef, Decorator, OverloadedFuncDef)):
+            return _callable_from_node(node)
+        if isinstance(node, Var) and node.type is not None:
+            proper = get_proper_type(node.type)
+            if isinstance(proper, CallableType):
+                return proper
+            if isinstance(proper, Overloaded) and len(proper.items) == 1:
+                return proper.items[0]
+    if isinstance(expr, MemberExpr):
+        node = expr.node
+        if isinstance(node, Var) and node.type is not None:
+            proper = get_proper_type(node.type)
+            if isinstance(proper, CallableType):
+                return proper
+            if isinstance(proper, Overloaded) and len(proper.items) == 1:
+                return proper.items[0]
     return None
 
 
@@ -496,6 +519,14 @@ def _safe_named_generic_type(ctx: FunctionContext, fullname: str, args: list[Typ
         return ctx.api.named_generic_type(fullname, args)
     except AssertionError:
         # Avoid mypy INTERNAL ERROR when symbols are unresolved in conditional scopes.
+        proper_default = get_proper_type(ctx.default_return_type)
+        if (
+            isinstance(proper_default, Instance)
+            and proper_default.type.fullname == fullname
+            and len(proper_default.args) == len(args)
+        ):
+            # Keep inferred generic args instead of degrading to Any/Any.
+            return Instance(proper_default.type, args)
         return ctx.default_return_type
 
 
@@ -508,17 +539,30 @@ def _a_sync_function_hook(ctx: FunctionContext) -> Type:
             expr = ctx.args[idx][0]
             if isinstance(expr, StrExpr) and expr.value in {"sync", "async"}:
                 default = expr.value
-        if name == "coro_fn" and ctx.arg_types[idx]:
-            candidate = ctx.arg_types[idx][0]
-            proper = get_proper_type(candidate)
+        if name == "coro_fn" and ctx.args[idx]:
+            expr = ctx.args[idx][0]
+            if isinstance(expr, StrExpr):
+                default = expr.value
+
+    for args in ctx.args:
+        if not args:
+            continue
+        expr_callable = _callable_from_expression(args[0])
+        if expr_callable is not None:
+            coro_arg_type = expr_callable
+            break
+
+    if coro_arg_type is None:
+        for arg_types in ctx.arg_types:
+            if not arg_types:
+                continue
+            proper = get_proper_type(arg_types[0])
             if isinstance(proper, CallableType):
                 coro_arg_type = proper
-            elif isinstance(proper, Overloaded) and len(proper.items) == 1:
+                break
+            if isinstance(proper, Overloaded) and len(proper.items) == 1:
                 coro_arg_type = proper.items[0]
-            elif ctx.args[idx]:
-                expr = ctx.args[idx][0]
-                if isinstance(expr, StrExpr):
-                    default = expr.value
+                break
 
     if default is None:
         default = _env_default_mode()
