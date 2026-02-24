@@ -13,8 +13,8 @@ Decorator = Callable[[TestFunc], TestFunc]
 
 fixture: Decorator = pytest.fixture
 asyncio_cooperative: Decorator = pytest.mark.asyncio_cooperative
-test_both: Decorator = pytest.mark.parametrize("cls_to_test", [ASyncIterable, ASyncIterator])
-test_all: Decorator = pytest.mark.parametrize(
+param_both: Decorator = pytest.mark.parametrize("cls_to_test", [ASyncIterable, ASyncIterator])
+param_all: Decorator = pytest.mark.parametrize(
     "cls_to_test", [ASyncIterable, ASyncIterator, ASyncFilter, ASyncSorter]
 )
 
@@ -48,7 +48,7 @@ def async_error_generator() -> Iterator[Callable[..., AsyncIterator[int]]]:
     yield async_err_gen
 
 
-@test_both
+@param_both
 def test_wrap_types(
     cls_to_test: Any, async_generator: Callable[..., AsyncIterator[int]]
 ) -> None:
@@ -56,7 +56,7 @@ def test_wrap_types(
     assert isinstance(cls_to_test.wrap(async_generator()), cls_to_test)
 
 
-@test_both
+@param_both
 def test_sync(cls_to_test: Any, async_generator: Callable[..., AsyncIterator[int]]) -> None:
     # sourcery skip: identity-comprehension, list-comprehension
     # comprehension
@@ -77,7 +77,7 @@ def test_sync(cls_to_test: Any, async_generator: Callable[..., AsyncIterator[int
     assert cls_to_test.wrap(async_generator()).materialized == [0, 1, 2]
 
 
-@test_both
+@param_both
 @asyncio_cooperative
 async def test_async(
     cls_to_test: Any, async_generator: Callable[..., AsyncIterator[int]]
@@ -112,14 +112,14 @@ async def test_async(
     assert await cls_to_test.wrap(async_generator()) == [0, 1, 2]
 
 
-@test_both
+@param_both
 def test_sync_empty(
     cls_to_test: Any, async_generator_empty: Callable[[], AsyncIterator[None]]
 ) -> None:
     assert not list(cls_to_test(async_generator_empty()))
 
 
-@test_both
+@param_both
 @asyncio_cooperative
 async def test_async_empty(
     cls_to_test: Any, async_generator_empty: Callable[[], AsyncIterator[None]]
@@ -133,7 +133,7 @@ async def test_async_empty(
     assert not [i async for i in ait]
 
 
-@test_both
+@param_both
 def test_sync_partial(
     cls_to_test: Any, async_generator: Callable[..., AsyncIterator[int]]
 ) -> None:
@@ -150,7 +150,7 @@ def test_sync_partial(
     assert remaining == [3, 4] if cls_to_test is ASyncIterator else [0, 1, 2, 3, 4]
 
 
-@test_both
+@param_both
 @asyncio_cooperative
 async def test_async_partial(
     cls_to_test: Any, async_generator: Callable[..., AsyncIterator[int]]
@@ -168,7 +168,7 @@ async def test_async_partial(
     assert remaining == [3, 4] if cls_to_test is ASyncIterator else [0, 1, 2, 3, 4]
 
 
-@test_both
+@param_both
 def test_stop_iteration_sync(
     cls_to_test: Any, async_generator: Callable[..., AsyncIterator[int]]
 ) -> None:
@@ -183,7 +183,7 @@ def test_stop_iteration_sync(
                 next(it)
 
 
-@test_both
+@param_both
 @asyncio_cooperative
 async def test_stop_iteration_async(
     cls_to_test: Any, async_generator: Callable[..., AsyncIterator[int]]
@@ -296,7 +296,7 @@ async def test_aiterator_decorated_method_async(
     assert await retval == [0, 1, 2]
 
 
-@test_both
+@param_both
 def test_sync_error_handling(
     cls_to_test: Any, async_error_generator: Callable[[], AsyncIterator[int]]
 ) -> None:
@@ -308,7 +308,7 @@ def test_sync_error_handling(
     assert results == [0, 1]
 
 
-@test_both
+@param_both
 @asyncio_cooperative
 async def test_async_error_handling(
     cls_to_test: Any, async_error_generator: Callable[[], AsyncIterator[int]]
@@ -325,13 +325,13 @@ async def test_async_error_handling(
 # Test failures
 
 
-@test_both
+@param_both
 def test_sync_with_iterable(cls_to_test: Any) -> None:
     with pytest.raises(TypeError):
         cls_to_test([0, 1, 2])
 
 
-@test_both
+@param_both
 @asyncio_cooperative
 async def test_async_with_iterable(cls_to_test: Any) -> None:
     with pytest.raises(TypeError):
@@ -375,7 +375,7 @@ async def test_async_iterator_aiter_method(
     assert async_iterator is ait  # Should return self
 
 
-@test_all
+@param_all
 def test_class_docstring_empty(cls_to_test: Any) -> None:
     """Test if the class with no docstring was correctly assigned a docstring."""
 
@@ -395,7 +395,7 @@ def test_class_docstring_empty(cls_to_test: Any) -> None:
     )
 
 
-@test_all
+@param_all
 def test_class_docstring_append(cls_to_test: Any) -> None:
     """
     Test if the class docstring suffix is correctly formatted and appended using regular expressions.
@@ -419,7 +419,7 @@ def test_class_docstring_append(cls_to_test: Any) -> None:
     ), f"Docstring does not match expected pattern. \nDocstring: {doc}"
 
 
-@test_all
+@param_all
 def test_method_docstring_replacement(cls_to_test: Any) -> None:
     """Test if the method docstring is correctly formatted."""
 
@@ -431,7 +431,7 @@ def test_method_docstring_replacement(cls_to_test: Any) -> None:
     assert ":class:`~builtins.str`" in doc
 
 
-@test_all
+@param_all
 def test_typevar_default(cls_to_test: Any) -> None:
     """Ensure that when T is unspecified, 'objects' is used."""
 
@@ -445,7 +445,7 @@ def test_typevar_default(cls_to_test: Any) -> None:
     assert "objects" in doc
 
 
-@test_all
+@param_all
 def test_typevar_specified(cls_to_test: Any) -> None:
     """Ensure the typevar T reflects the specific type used."""
 
@@ -459,7 +459,7 @@ def test_typevar_specified(cls_to_test: Any) -> None:
     assert "int" in doc
 
 
-@test_all
+@param_all
 def test_typevar_default_obj(cls_to_test: Any) -> None:
     """Ensure that when T is unspecified, ':obj:`T` objects' is used."""
 
@@ -473,13 +473,13 @@ def test_typevar_default_obj(cls_to_test: Any) -> None:
     assert ":obj:`T` objects" in doc
 
 
-@test_all
+@param_all
 def test_init_subclass_with_typevar(cls_to_test: Any) -> None:
     _T = TypeVar("_T")
 
     class MySubclass(cls_to_test[_T]): ...  # type: ignore[misc]
 
 
-@test_all
+@param_all
 def test_init_subclass_with_generic_alias(cls_to_test: Any) -> None:
     class MySubclass(cls_to_test[tuple[int, str, bool]]): ...  # type: ignore[misc]
