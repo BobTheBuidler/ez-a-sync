@@ -1,5 +1,6 @@
 import asyncio
 import time
+import warnings
 
 import pytest
 
@@ -75,15 +76,27 @@ async def test_singleton_meta_async(cls: type, i: int):
     ), "There is a 2 second sleep in 'test_cached_property' but it should only run once."
 
     # Can we override with kwargs?
-    with pytest.raises(RuntimeError):
-        async_instance.test_fn(sync=True)
+    with warnings.catch_warnings():
+        warnings.filterwarnings(
+            "ignore",
+            category=RuntimeWarning,
+            message=r"coroutine '.*' was never awaited",
+        )
+        with pytest.raises(RuntimeError):
+            async_instance.test_fn(sync=True)
 
     # Can we access hidden methods for properties?
     assert await async_instance.__test_property__() == 0
     assert await async_instance.__test_cached_property__() == 0
     # Can we override them too?
-    with pytest.raises(RuntimeError):
-        async_instance.__test_cached_property__(sync=True)
+    with warnings.catch_warnings():
+        warnings.filterwarnings(
+            "ignore",
+            category=RuntimeWarning,
+            message=r"coroutine '.*' was never awaited",
+        )
+        with pytest.raises(RuntimeError):
+            async_instance.__test_cached_property__(sync=True)
 
 
 class TestUnspecified(ASyncGenericSingleton):

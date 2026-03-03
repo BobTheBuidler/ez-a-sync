@@ -1,5 +1,6 @@
 import asyncio
 import time
+import warnings
 
 import pytest
 
@@ -146,10 +147,16 @@ async def test_method_async(cls: type, i: int):
 
         # Can we override with kwargs?
         # Does it fail if we run it synchronously with the event loop running?
-        with pytest.raises(SyncModeInAsyncContextError):
-            async_instance.test_fn(sync=True)
-        with pytest.raises(SyncModeInAsyncContextError):
-            async_instance.test_fn(asynchronous=False)
+        with warnings.catch_warnings():
+            warnings.filterwarnings(
+                "ignore",
+                category=RuntimeWarning,
+                message=r"coroutine '.*' was never awaited",
+            )
+            with pytest.raises(SyncModeInAsyncContextError):
+                async_instance.test_fn(sync=True)
+            with pytest.raises(SyncModeInAsyncContextError):
+                async_instance.test_fn(asynchronous=False)
 
 
 @classes
@@ -200,8 +207,14 @@ async def test_property_async(cls: type, i: int):
     getter_coro = getter()
     assert asyncio.iscoroutine(getter_coro), getter_coro
     assert await getter_coro == i * 2
-    with pytest.raises(SyncModeInAsyncContextError):
-        await getter(sync=True)
+    with warnings.catch_warnings():
+        warnings.filterwarnings(
+            "ignore",
+            category=RuntimeWarning,
+            message=r"coroutine '.*' was never awaited",
+        )
+        with pytest.raises(SyncModeInAsyncContextError):
+            await getter(sync=True)
 
 
 @classes
@@ -274,8 +287,14 @@ async def test_cached_property_async(cls: type, i: int):
     assert await getter_coro == i * 3
 
     # Can we override them too?
-    with pytest.raises(SyncModeInAsyncContextError):
-        getter(sync=True)
+    with warnings.catch_warnings():
+        warnings.filterwarnings(
+            "ignore",
+            category=RuntimeWarning,
+            message=r"coroutine '.*' was never awaited",
+        )
+        with pytest.raises(SyncModeInAsyncContextError):
+            getter(sync=True)
     assert await async_instance.__test_cached_property__(sync=False) == i * 3
 
     # Did it only run once?
