@@ -1,5 +1,6 @@
 import asyncio
 import atexit
+import os
 import signal
 import time
 
@@ -295,6 +296,47 @@ def test_signal_and_atexit_registration(monkeypatch):
     assert called["atexit"]
     assert called["sigint"]
     assert called["sigterm"]
+
+
+def test_second_sigint_forces_immediate_exit(monkeypatch):
+    """
+    Test that repeated SIGINT escalates to an immediate hard exit.
+    """
+    from a_sync import executor as executor_module
+
+    class ForcedExit(RuntimeError):
+        pass
+
+    installed_handlers = {}
+
+    def fake_signal(sig, handler):
+        installed_handlers[sig] = handler
+        return handler
+
+    monkeypatch.setattr(signal, "signal", fake_signal)
+    monkeypatch.setattr(signal, "getsignal", lambda _sig: signal.SIG_IGN)
+
+    exit_codes = []
+
+    def fake_exit(code):
+        exit_codes.append(code)
+        raise ForcedExit(code)
+
+    monkeypatch.setattr(os, "_exit", fake_exit)
+    monkeypatch.setattr(executor_module, "_INTERRUPT_RECEIVED", False, raising=False)
+
+    _EXECUTORS.clear()
+    _EXECUTORS.add(DummyExecutor())
+
+    executor_module._register_executor_shutdown()
+    sigint_handler = installed_handlers[signal.SIGINT]
+
+    sigint_handler(signal.SIGINT, None)
+    assert exit_codes == []
+
+    with pytest.raises(ForcedExit, match="130"):
+        sigint_handler(signal.SIGINT, None)
+    assert exit_codes == [130]
 
 
 def test_multiple_executor_shutdown(monkeypatch):
