@@ -48,7 +48,10 @@ def _shutdown_all_executors(*args) -> None:
     """Shutdown all registered executors (non-blocking)."""
     for executor in list(_EXECUTORS):
         try:
-            executor.shutdown(wait=False)
+            try:
+                executor.shutdown(wait=False, cancel_futures=True)
+            except TypeError:
+                executor.shutdown(wait=False)
         except Exception:
             pass
 

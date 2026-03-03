@@ -297,6 +297,33 @@ def test_signal_and_atexit_registration(monkeypatch):
     assert called["sigterm"]
 
 
+def test_sigint_chains_to_default_handler(monkeypatch):
+    """
+    Test that SIGINT keeps normal Python KeyboardInterrupt behavior.
+    """
+    from a_sync import executor as executor_module
+
+    installed_handlers = {}
+
+    def fake_signal(sig, handler):
+        installed_handlers[sig] = handler
+        return handler
+
+    monkeypatch.setattr(signal, "signal", fake_signal)
+    monkeypatch.setattr(signal, "getsignal", lambda sig: signal.default_int_handler if sig == signal.SIGINT else signal.SIG_IGN)
+
+    dummy = DummyExecutor()
+    _EXECUTORS.clear()
+    _EXECUTORS.add(dummy)
+
+    executor_module._register_executor_shutdown()
+    sigint_handler = installed_handlers[signal.SIGINT]
+
+    with pytest.raises(KeyboardInterrupt):
+        sigint_handler(signal.SIGINT, None)
+    assert dummy.shutdown_called
+
+
 def test_multiple_executor_shutdown(monkeypatch):
     """
     Test that all registered executors are shut down, even if one raises.
