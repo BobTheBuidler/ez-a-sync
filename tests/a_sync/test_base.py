@@ -85,8 +85,13 @@ def test_method_sync(cls: type, i: int):
     # Can we override with kwargs?
     assert sync_instance.test_fn(sync=True) == i
     assert sync_instance.test_fn(asynchronous=False) == i
-    assert asyncio.iscoroutine(sync_instance.test_fn(sync=False))
-    assert asyncio.iscoroutine(sync_instance.test_fn(asynchronous=True))
+    sync_false_coro = sync_instance.test_fn(sync=False)
+    assert asyncio.iscoroutine(sync_false_coro)
+    sync_false_coro.close()
+
+    async_true_coro = sync_instance.test_fn(asynchronous=True)
+    assert asyncio.iscoroutine(async_true_coro)
+    async_true_coro.close()
     if isinstance(sync_instance, TestSync):
         # this raises an assertion error inside of the test_fn execution. this is okay.
         with pytest.raises(WrongThreadError):
