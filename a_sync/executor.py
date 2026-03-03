@@ -18,6 +18,7 @@ import asyncio
 import atexit
 import concurrent.futures
 import multiprocessing.context
+import os
 import queue
 import signal
 import threading
@@ -37,6 +38,7 @@ from a_sync.primitives._debug import _DebugDaemonMixin
 # This ensures compatibility with other libraries and deduplicates shutdown logic.
 
 _EXECUTORS: "weakref.WeakSet[AsyncExecutor]" = weakref.WeakSet()
+_INTERRUPT_RECEIVED = False
 
 
 def register_executor(executor) -> None:
@@ -48,7 +50,10 @@ def _shutdown_all_executors(*args) -> None:
     """Shutdown all registered executors (non-blocking)."""
     for executor in list(_EXECUTORS):
         try:
-            executor.shutdown(wait=False)
+            try:
+                executor.shutdown(wait=False, cancel_futures=True)
+            except TypeError:
+                executor.shutdown(wait=False)
         except Exception:
             pass
 
@@ -61,6 +66,10 @@ def _register_executor_shutdown() -> None:
         prev_handler = signal.getsignal(signalnum)
 
         def handler(signum, frame):
+            global _INTERRUPT_RECEIVED
+            if _INTERRUPT_RECEIVED:
+                os._exit(130 if signum == signal.SIGINT else 143)
+            _INTERRUPT_RECEIVED = True
             _shutdown_all_executors()
             if callable(prev_handler) and prev_handler not in (signal.SIG_DFL, signal.SIG_IGN):
                 prev_handler(signum, frame)
