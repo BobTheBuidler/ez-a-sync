@@ -1,6 +1,5 @@
 import asyncio
 import atexit
-import os
 import signal
 import time
 
@@ -298,14 +297,11 @@ def test_signal_and_atexit_registration(monkeypatch):
     assert called["sigterm"]
 
 
-def test_second_sigint_forces_immediate_exit(monkeypatch):
+def test_sigint_chains_to_default_handler(monkeypatch):
     """
-    Test that repeated SIGINT escalates to an immediate hard exit.
+    Test that SIGINT keeps normal Python KeyboardInterrupt behavior.
     """
     from a_sync import executor as executor_module
-
-    class ForcedExit(RuntimeError):
-        pass
 
     installed_handlers = {}
 
@@ -314,29 +310,18 @@ def test_second_sigint_forces_immediate_exit(monkeypatch):
         return handler
 
     monkeypatch.setattr(signal, "signal", fake_signal)
-    monkeypatch.setattr(signal, "getsignal", lambda _sig: signal.SIG_IGN)
+    monkeypatch.setattr(signal, "getsignal", lambda sig: signal.default_int_handler if sig == signal.SIGINT else signal.SIG_IGN)
 
-    exit_codes = []
-
-    def fake_exit(code):
-        exit_codes.append(code)
-        raise ForcedExit(code)
-
-    monkeypatch.setattr(os, "_exit", fake_exit)
-    monkeypatch.setattr(executor_module, "_INTERRUPT_RECEIVED", False, raising=False)
-
+    dummy = DummyExecutor()
     _EXECUTORS.clear()
-    _EXECUTORS.add(DummyExecutor())
+    _EXECUTORS.add(dummy)
 
     executor_module._register_executor_shutdown()
     sigint_handler = installed_handlers[signal.SIGINT]
 
-    sigint_handler(signal.SIGINT, None)
-    assert exit_codes == []
-
-    with pytest.raises(ForcedExit, match="130"):
+    with pytest.raises(KeyboardInterrupt):
         sigint_handler(signal.SIGINT, None)
-    assert exit_codes == [130]
+    assert dummy.shutdown_called
 
 
 def test_multiple_executor_shutdown(monkeypatch):
